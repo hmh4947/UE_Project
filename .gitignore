@@ -72,3 +72,30 @@ Saved/*
 
 # Cache files for the editor to use
 *.DerivedDataCache/*
+*.exp
+*.uasset
+*.tga
+*.png
+*.fbx
+*.json
+*.target
+*.pdb
+*.umap
+*.ini
+*.modules
+*.bin
+*.old
+/MyProject/Intermediate
+/MyProject/Plugins
+/MyProject/Saved
+/MyProject/Content
+MyProject/.vsconfig
+MyProject/MyProject.uproject
+MyProject/Source/Maya/SK_Mannequin_HIK_Edit_Template.mb
+MyProject/Source/Motionbuilder/SK_Mannequin_Edit_Template.fbm/UE4_Mannequin_occlusion.jpg
+MyProject/Source/SK_Mannequin_A_Pose_README.txt
+MyProject/Source/SK_Mannequin_T_Pose_README.txt
+MyProject/Source/SKMannequin_A_Pose/SK_Mannequin_A_Pose_README.txt
+/MyProject/Source/SKMannequin_A_Pose
+/MyProject/Source/SKMannequin_T_Pose
+MyProject/Source/UE4_MocapOnline_Tech_Notes.txt
