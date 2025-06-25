@@ -6,11 +6,29 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "HUDWidget.h"
 #include "ClickMovePlayerController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardData.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
+
+const FName AABAIController::HomePosKey(TEXT("HomePos"));
+const FName AABAIController::PatrolPosKey(TEXT("PatrolPos"));
+const FName AABAIController::TargetKey(TEXT("Target"));
 
 AABAIController::AABAIController()
 {
-//	RepeatInterval = 3.0f;
+	//비헤이비어 트리 오브젝트 가져오기
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BT(TEXT("/Game/Enemy/BT_EnemyAI.BT_EnemyAI"));
+	if (BT.Succeeded()) {
+		BehaviorTree = BT.Object;
+	}
+
+	//블랙보드 오브젝트 가져오기
+	static ConstructorHelpers::FObjectFinder<UBlackboardData> BB(TEXT("/Game/Enemy/BB_EnemyAI.BB_EnemyAI"));
+	if (BB.Succeeded()) {
+		BlackboardData = BB.Object;
+	}
+	
 }
 
 void AABAIController::UpdateEnemyHealthPercent(float HealthPercent)
@@ -27,6 +45,24 @@ void AABAIController::UpdateEnemyHealthPercent(float HealthPercent)
 		controller->HUDWidget->UpdateEnemyHealthPercent(HealthPercent);
 
 	}
+	
+}
+
+//빙의 실행
+void AABAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if (UseBlackboard(BlackboardData, Blackboard))
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
+}
+
+//빙의 해제
+void AABAIController::OnUnPossess()
+{
+	Super::OnUnPossess();
 	
 }
 	

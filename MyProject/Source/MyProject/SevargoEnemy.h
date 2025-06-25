@@ -9,12 +9,14 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "HealthComponent.h"
+#include "EnemyHealthComponent.h"
+#include "SevargoEnemyAnimInstance.h"
+#include "ABAIController.h"
+#include "EnemyStateEnum.h"
 #include "SevargoEnemy.generated.h"
 
-/**
- * 
- */
 UCLASS()
+
 class MYPROJECT_API ASevargoEnemy : public AEnemyCharacter, public IHealthInterface
 {
 	GENERATED_BODY()
@@ -33,13 +35,28 @@ public:
 
 	class UHealthComponent* HealthComponent;
 
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse,
-		const FHitResult& Hit);
+	class UEnemyHealthComponent* EnemyHealthComponent;
 
+	virtual void PostInitializeComponents() override;
+
+	UPROPERTY()
+	class USevargoEnemyAnimInstance* ABAnim;
+
+	UFUNCTION(BlueprintCallable, Category="EnemyCharacter")
+	void AttackStart();
+	UFUNCTION(BlueprintCallable, Category = "EnemyCharacter")
+	void AttackEnd();
+
+	// 메쉬에서 무기를 받아오는 변수
+	FBodyInstance* Weapon;
+	// 무기 위치
+	FVector SaveAttackStartPos;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	bool OnDeath;
+
+	UPROPERTY(EditAnyWhere)
+	EnemyState EnemyStateEnum;
 private:
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;
@@ -48,9 +65,9 @@ private:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = AttackCollision, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* SphereComponent;
 
-	
 
 protected:
+	class AABAIController* Controller;
 	//플레이어에게 입힐 데미지
 	UPROPERTY(EditAnywhere,Category=Damage)
 	float Damage = 30.f;

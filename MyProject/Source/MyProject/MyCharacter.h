@@ -4,8 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InteractionInterface.h"
 #include "MyCharacter.generated.h"
 
+class AMyProjectHUD;
+
+USTRUCT()
+struct FInteractionData
+{
+	GENERATED_USTRUCT_BODY()
+	
+	FInteractionData() : CurrentInteractable(nullptr), LastInteractionCheckTime(0.0f)
+	{
+
+	};
+	UPROPERTY()
+	AActor* CurrentInteractable;
+
+	float LastInteractionCheckTime;
+
+};
 UCLASS()
 class MYPROJECT_API AMyCharacter : public ACharacter
 {
@@ -20,12 +38,17 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	FORCEINLINE bool IsInteracting() const { return GetWorldTimerManager().IsTimerActive(TimerHandle_Interaction); };
 
+	UPROPERTY(EditAnyWhere, Category = Input)
+	class UInputAction* IA_Interaction;
 
-
+	
 protected:
+	UPROPERTY()
+	AMyProjectHUD* HUD;
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera",meta=(AllowPrivateAccess="true"))
 	class UCameraComponent* CameraComponent;
@@ -33,5 +56,25 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category="Camera",meta=(AllowPrivateAccess="true"))
 	class USpringArmComponent* SpringArmComponent;
 
+	UPROPERTY(VisibleAnywhere, Category="Character | Interaction")
+	TScriptInterface<IInteractionInterface> TargetInteractable;
+
+	//상호작용 빈도
+	float InteractionCheckFrequency;
+
+	//상호작용 거리
+	float InteractionCheckDistance;
+
+	//상호작용을 위한 타이머
+	FTimerHandle TimerHandle_Interaction;
+
+	FInteractionData InteractionData;
+
+	void PeformInteractionCheck();
+	void FoundInteractable(AActor* NewInteractable);
+	void NoInteractableFound();
+	void BeginInteract();
+	void EndInteract();
+	void Interact();
 
 };

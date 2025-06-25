@@ -15,15 +15,17 @@
 #include "SevargoEnemy.h"
 #include "Sword.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "EnemyHealthComponent.h"
+#include "Skill/SkillComponent.h"
 
 
 AWarriorCharacter::AWarriorCharacter()
 {
-
 	MaxCombo = 2;
 	AttackEndComboState();
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-
+//	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	PlayerHealthComponent = CreateDefaultSubobject<UPlayerHealthComponent>(TEXT("PlayerHealthComponent"));
+	skillComponent = CreateDefaultSubobject<USkillComponent>(TEXT("SkillComponent"));
 }
 
 void AWarriorCharacter::OnDeath_Implementation()
@@ -40,13 +42,45 @@ void AWarriorCharacter::OnTakeDamage_Implementation()
 		Cast<AClickMovePlayerController>(GetController());
 	if(PlayerController!=nullptr)
 	{
-		PlayerController->UpdateHealthPercent(HealthComponent->GetHealthPercent());
+		PlayerController->UpdateHealthPercent(PlayerHealthComponent->GetHealthPercent());
 	}
+}
+void AWarriorCharacter::losehealth()
+{
+	if (HitTrace.GetActor())
+	{
+		ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(HitTrace.GetActor());
+		if (Enemy != nullptr)
+		{
+
+			
+			UEnemyHealthComponent* EnemyHealthComponent = Enemy->FindComponentByClass<UEnemyHealthComponent>();
+			if (EnemyHealthComponent != nullptr)
+			{
+
+				UE_LOG(LogTemp, Warning, TEXT("Hit ActorResult: %s"), *HitTrace.GetActor()->GetName());
+
+				EnemyHealthComponent->LoseHealth(500);
+				
+			}
+
+		}
+
+	}
+
 }
 
 void AWarriorCharacter::MeleeTrace()
 {
-
+	
+	MeleeTraceGetHitActor();
+	
+	
+}
+void AWarriorCharacter::MeleeTraceGetHitActor()
+{
+	//tracehit
+	isLoseHealth = false;
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PC && !bMeleeBlocked) {
 
@@ -69,11 +103,9 @@ void AWarriorCharacter::MeleeTrace()
 		MeleeTrace.Push(MeleeTraceBottom);
 		MeleeTrace.Push(MeleeTraceTop);
 
-		for (FHitResult HitResult : HitResults) {
-			UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *HitResult.BoneName.ToString());
-		}
-
-		for (int i = 0; i < MeleeVectorLength; i += 5)
+		
+	
+		for (int i = 0; i < MeleeVectorLength; i += 1)
 		{
 
 			MeleeTracePrevious.Push(MeleeTraceBottom + MeleeVectorDirection * i);
@@ -81,6 +113,11 @@ void AWarriorCharacter::MeleeTrace()
 
 
 		}
+		/*배열의 모든 요소 출력
+		for (FHitResult& HitResult : HitResults) {
+			UE_LOG(LogTemp, Warning, TEXT("Hit Actors: %s"), *HitTrace.GetActor()->GetName());
+		}
+		*/
 		// 각 지점에서 레이 트레이스 수행
 		for (int i = 0; i < MeleeTrace.Num() - 1; ++i)
 		{
@@ -90,41 +127,30 @@ void AWarriorCharacter::MeleeTrace()
 
 			
 			bHit = GetWorld()->LineTraceSingleByChannel(HitTrace, Start, End, ECC_EngineTraceChannel2, TraceParams);
-			
-			
-			if (bHit)
+			if (HitTrace.GetActor())
 			{
-				HitResults.Push(HitTrace);
-				if (HitTrace.GetActor())
+
+
+				ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(HitTrace.GetActor());
+				if (Enemy != nullptr)
 				{
 
-					ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(HitTrace.GetActor());
-					if (Enemy != nullptr)
+					UHealthComponent* EnemyHealthComponent = Enemy->FindComponentByClass<UHealthComponent>();
+					if (EnemyHealthComponent != nullptr)
 					{
 
-						UHealthComponent* EnemyHealthComponent = Enemy->FindComponentByClass<UHealthComponent>();
-						if (EnemyHealthComponent != nullptr)
-						{
-
-							//UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
-							EnemyHealthComponent->LoseHealth(Damage);
-							
-						}
+						isLoseHealth = true;
 
 					}
 
 				}
 
-				if (HitTrace.BoneName != NAME_None)
-				{
-					//	UE_LOG(LogTemp, Warning, TEXT("Hit Bone: %s"), *HitResult.BoneName.ToString());
-				}
-
 			}
+		
 			
 		}
-
 		
+		//디버그
 		if (MeleeTrace.Num() > 0) {
 			for (int i = 0; i < MeleeTrace.Num(); i++) {
 
@@ -178,6 +204,10 @@ void AWarriorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	{
 		EnhancedInputComponent->BindAction(IA_Attack, ETriggerEvent::Triggered, this, &AWarriorCharacter::Attack);
+		EnhancedInputComponent->BindAction(IA_KeyboardQ, ETriggerEvent::Completed, this, &AWarriorCharacter::Attack_Q);
+		EnhancedInputComponent->BindAction(IA_KeyboardW, ETriggerEvent::Completed, this, &AWarriorCharacter::Attack_W);
+		EnhancedInputComponent->BindAction(IA_KeyboardE, ETriggerEvent::Completed, this, &AWarriorCharacter::Attack_E);
+		EnhancedInputComponent->BindAction(IA_KeyboardR, ETriggerEvent::Completed, this, &AWarriorCharacter::Attack_R);
 	
 	}
 }
@@ -205,13 +235,19 @@ void AWarriorCharacter::BeginPlay()
 	
 }
 
+
+
 void AWarriorCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 	// 캐릭터의 현재 위치를 가져옴
 	CharacterLocation = GetActorLocation();
+	// 캐릭터의 이동 속도
 
+	Speed = GetCharacterMovement()->MaxWalkSpeed;
+	CurrentRotator = GetActorRotation();
+	
 }
 
 void AWarriorCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
@@ -246,6 +282,7 @@ void AWarriorCharacter::AttackEndComboState()
 //왼쪽 마우스 클릭시 마우스 방향을 바라봄
 void AWarriorCharacter::Turn()
 {
+
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
@@ -279,6 +316,7 @@ void AWarriorCharacter::Turn()
 	
 }
 
+
 void AWarriorCharacter::Attack()
 {
 	
@@ -307,6 +345,26 @@ void AWarriorCharacter::Attack()
 		CanNextCombo = false;
 		AttackEndComboState();
 	}
+}
+
+void AWarriorCharacter::Attack_Q()
+{
+	skillComponent->Skill(this, ESkillInput::ESI_InputQ);
+}
+
+void AWarriorCharacter::Attack_W()
+{
+	skillComponent->Skill(this, ESkillInput::ESI_InputW);
+}
+
+void AWarriorCharacter::Attack_E()
+{
+	skillComponent->Skill(this, ESkillInput::ESI_InputE);
+}
+
+void AWarriorCharacter::Attack_R()
+{
+	skillComponent->Skill(this, ESkillInput::ESI_InputR);
 }
 
 

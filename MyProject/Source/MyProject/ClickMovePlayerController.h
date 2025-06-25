@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "WarriorCharacter.h"
 #include "HUDWidget.h"
+#include "InventoryWidget.h"
 #include "ClickMovePlayerController.generated.h"
 
 
@@ -39,6 +40,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* IA_Dash; 
 
+	UPROPERTY(EditAnyWhere, Category=Input)
+	class UInputAction* IA_Inventory;
+
+
 
 	virtual void SetupInputComponent() override;
 
@@ -46,7 +51,7 @@ public:
 	bool IsAttacking;
 
 	//움직이고 있는 상태인지 체크
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = state, Meta = (AllowPrivateAccess = true))
 	bool IsMoving;
 
 	//이동 커서
@@ -58,14 +63,14 @@ public:
 	float ShortPressThreshold;
 
 	void MoveToMouseCursor();
-
+	void HitDash();
 	void Dash();
-	void DashReleased();
+	void StopDash();
+	void TriggerDash();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = state)
 	bool IsDash;
-
-
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
 	FVector CachedDestination; //마우스 클릭 위치 저장
@@ -74,6 +79,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UHUDWidget> BP_HUDWidget;
 
+	
 	void UpdateHealthPercent(float HealthPercent);
 
 	FVector Start;
@@ -92,10 +98,19 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
 	FVector CharacterLocation;
+
+	UPROPERTY()
+	FVector Direction;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = state)
+	FVector characterSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
+	FVector dash;
 protected:
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = state)
 	bool bClickRightMouse;
 
 	//Input
@@ -108,6 +123,14 @@ protected:
 
 	virtual void PlayerTick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = state)
+	bool Dashcool=true;
+
+
+	UPROPERTY()
+	FTimerHandle Timer;
+
+	void coolTimer();
 private:
 
 	AWarriorCharacter* WarriorCharacterInstance;
@@ -115,4 +138,8 @@ private:
 public:
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;
+
+	//아이템 배열
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FString> item;
 };

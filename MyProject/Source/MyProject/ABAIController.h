@@ -25,18 +25,33 @@ public:
 
 	void UpdateEnemyHealthPercent(float HealthPercent);
 
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 
-	//virtual void OnPossess(APawn* InPawn) override;
-	//virtual void OnUnPossess() override;
+	static const FName HomePosKey;
+	static const FName PatrolPosKey;
+	static const FName TargetKey;
+
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
+	//타이머 매니저에 콜백을 등록하기 위해 필요한 핸들
+	FTimerHandle TimerHandle;
 
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;
 	
+	UPROPERTY(VisibleAnyWhere)
+	class UBehaviorTree* BehaviorTree;
 
+	UPROPERTY(VisibleAnyWhere)
+	class UBlackboardData* BlackboardData;
+
+	class UBlackboardComponent* Blackboard;
+
+	
 };
 
 

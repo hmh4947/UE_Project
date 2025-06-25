@@ -11,7 +11,6 @@ void UHUDWidget::UpdateHealthPercent(float HealthPercent)
 
 void UHUDWidget::UpdateEnemyHealthPercent(float HealthPercent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("healthComponent"));
 	EnemyHealthBar->SetPercent(HealthPercent);
 	
 }

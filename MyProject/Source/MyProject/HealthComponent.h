@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "SevargoEnemyAnimInstance.h"
 #include "HealthComponent.generated.h"
 
 
@@ -17,18 +18,27 @@ public:
 	UHealthComponent();
 
 	//소유자로부터 체력을 뺏음
-	void LoseHealth(float Amount);
+	virtual void LoseHealth(float Amount);
 	
+	//소유자의 체력 세팅
+	virtual void SetHealth(float health);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category=Health)
-	float Health = 200000.f;
-
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	FORCEINLINE float GetHealthPercent() const { return Health / 200000.f; }
+//	FORCEINLINE float GetHealthPercent() const { return Health / 100.f; }
+
+	UPROPERTY(EditDefaultsOnly, Category = Health)
+	float Health;
+
+	bool OnDeath=false;
+
+	
+
 };

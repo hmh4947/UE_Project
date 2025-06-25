@@ -17,6 +17,8 @@ UHealthComponent::UHealthComponent()
 
 void UHealthComponent::LoseHealth(float Amount)
 {
+	/*
+
 	Health -= Amount;
 	
 	if (GetOwner()->Implements<UHealthInterface>()) {
@@ -25,13 +27,12 @@ void UHealthComponent::LoseHealth(float Amount)
 		
 	
 	}
-	if (Health <= 0.f) {
-		Health = 0.f;
-		if(GetOwner()->Implements<UHealthComponent>())
-		{
-			IHealthInterface::Execute_OnDeath(GetOwner());
-		}
-	}
+	*/
+}
+
+void UHealthComponent::SetHealth(float health)
+{
+	//Health = health;
 }
 
 

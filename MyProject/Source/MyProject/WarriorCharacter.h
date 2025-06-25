@@ -7,29 +7,35 @@
 #include "MyProject.h"
 #include "GameFramework/Character.h"
 #include "WarriorAnimInstance.h"
+#include "SevargoEnemyAnimInstance.h"
 #include "HealthInterface.h"
 #include "HealthComponent.h"
+#include "PlayerHealthComponent.h"
 #include "WarriorCharacter.generated.h"
 
 
 /**
  * 
  */
+class USkillComponent;
 UCLASS()
 class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInterface
 {
 	GENERATED_BODY()
 
 	void Attack();
-
+	void Attack_Q();
+	void Attack_W();
+	void Attack_E();
+	void Attack_R();
 	void Turn();
-
 	
 
 
 	virtual void PostInitializeComponents() override;
 
-
+	UPROPERTY(EditAnywhere)
+	USkillComponent* skillComponent;
 
 public:
 
@@ -44,8 +50,23 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* IA_Dash;
 
-	
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* IA_KeyboardQ;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* IA_KeyboardW;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* IA_KeyboardE;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* IA_KeyboardR;
+
+	FVector StartL;
+	FVector EndL;
+	FVector Direction;
+	//보간 계산 변수
+	float Interp;
 protected:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -54,6 +75,8 @@ protected:
 
 
 public:
+
+	void losehealth();
 
 	virtual void Tick(float DeltaTime);
 
@@ -90,14 +113,17 @@ public:
 	UPROPERTY()
 	class UWarriorAnimInstance* ABAnim;
 
+	UPROPERTY()
+	class USevargoEnemyAnimInstance* ABEnemyAnim;
+
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	virtual void OnDeath_Implementation() override;
 
 	virtual void OnTakeDamage_Implementation() override;
 
-	class UHealthComponent* HealthComponent;
-
+	//class UHealthComponent* HealthComponent;
+	class UPlayerHealthComponent* PlayerHealthComponent;
 
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category=location)
@@ -115,11 +141,18 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
 	FVector CharacterLocation;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = speed)
+	float Speed;
+
 	void MeleeTrace();
+	void MeleeTraceGetHitActor();
 	TArray<FVector> MeleeTracePrevious;
 	TArray<FVector> MeleeTraceCurrent;
 
 	TArray<FHitResult> HitResults;
+
+
+
 	bool bMeleeBlocked;
 
 
@@ -130,7 +163,10 @@ protected:
 	//적에게 입힐 데미지
 
 	UPROPERTY(EditAnywhere, Category = Damage)
-	float Damage = 30.f;
+	float Damage = 100.f;
 	FHitResult HitTrace;
 	bool bHit;
+public:
+	bool isLoseHealth=false;
+
 };

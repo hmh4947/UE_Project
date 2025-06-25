@@ -17,9 +17,11 @@ void UMeleeAnimNotifyState::BranchingPointNotifyTick(FBranchingPointNotifyPayloa
 	if (MeleeChar && !MeleeChar->bMeleeBlocked) {
 		MeleeChar->MeleeTrace();
 		NotifyTick(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, FrameDeltaTime);
+		
 	}
 	else {
 		NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset);
+	
 	}
 }
 
@@ -30,7 +32,15 @@ void UMeleeAnimNotifyState::BranchingPointNotifyEnd(FBranchingPointNotifyPayload
 		MeleeChar->MeleeTracePrevious.Empty();
 		MeleeChar->MeleeTraceCurrent.Empty();
 		MeleeChar->bMeleeBlocked = false;
+		if (MeleeChar->isLoseHealth)
+		{
+			//Ã¼·Â ÀÒ±â
+			MeleeChar->losehealth();
+			UE_LOG(LogTemp, Warning, TEXT("TraceTick"));
+
+		}
 	}
+	
 
 	NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset);
 }

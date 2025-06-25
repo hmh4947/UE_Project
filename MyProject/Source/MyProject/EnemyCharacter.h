@@ -5,8 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "EnemyCharacter.generated.h"
+UENUM(BlueprintType)
+enum class EEnemyState :uint8
+{
+	Alive UMETA(DisplayName = "Alive"),
+	Dead UMETA(DisplayName = "Dead")
+};
 
 UCLASS()
+
 class MYPROJECT_API AEnemyCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -26,5 +33,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
 
 };
