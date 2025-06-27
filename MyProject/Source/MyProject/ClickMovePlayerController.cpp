@@ -101,7 +101,9 @@ void AClickMovePlayerController::SetNewDestination(const FVector Destination)
 		if (MyPawn) {
 			float const Distance = FVector::Dist(Destination, MyPawn->GetActorLocation());
 			if (Distance > 120.0f) {
-		
+
+			
+
 					//함수 호출을 통해 목적지로 폰을 이동시킴(모듈추가)
 					UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Destination);
 				
@@ -142,6 +144,7 @@ void AClickMovePlayerController::MoveToMouseCursor()
 
 			 Start = Hit.ImpactPoint;
 			 End = Start + Hit.Normal * 100.0f;
+			
 			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5.0f, 0, 1.0f);
 	
 
@@ -159,7 +162,6 @@ void AClickMovePlayerController::HitDash()
 
 	if (!WarriorCharacterInstance->IsAttacking&&!Dashcool)
 	{
-		
 		APawn* const MyPawn = GetPawn();
 		CharacterLocation = MyPawn->GetActorLocation();
 		StartL = CharacterLocation;

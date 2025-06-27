@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MyProject/Skill/Skills.h"
+#include "MyProject/Interface/SkillHitCheckInterface.h"
 #include "SpellCastSkill.generated.h"
 
 /**
@@ -11,12 +12,15 @@
  */
 class USkeletalMeshComponent;
 UCLASS()
-class MYPROJECT_API ASpellCastSkill : public ASkills
+class MYPROJECT_API ASpellCastSkill : public ASkills, public ISkillHitCheckInterface
 {
 	GENERATED_BODY()
 public:
 
 	ASpellCastSkill();
+	virtual void HitCheck_Implementation() override;
+private:
+	void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
 
 	
 };

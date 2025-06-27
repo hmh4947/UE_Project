@@ -32,12 +32,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	
-
+	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos);
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> SkillMontage;
 
 	UPROPERTY(EditDefaultsOnly)
 	float coolTime;
+
+	UPROPERTY(EditDefaultsOnly)
+	float damage;
 
 public:	
 	// Called every frame

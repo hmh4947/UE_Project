@@ -24,8 +24,7 @@ void USkillComponent::BeginPlay()
 	{
 		ActivatableSkills.Add(GetWorld()->SpawnActor<ASkills>(StartSkillsClass[i]));
 		ActivatableSkills[i]->SetOwner(GetOwner());
-		//이름으로 스킬찾기위해 배열에 넣음
-	//	ActivatableSkillNames.Add(ActivatableSkills[i]->SkillName);
+
 	}
 
 }
@@ -50,10 +49,21 @@ void USkillComponent::Skill(ACharacter* Character, const ESkillInput& SkillInput
 	}
 }
 
+void USkillComponent::setCurrentSkill(ASkills* skill)
+{
+	currentSkill = skill;
+}
+
+ASkills* USkillComponent::getCurrentSkill() const
+{
+	return currentSkill;
+}
+
 void USkillComponent::startSkill(ACharacter* Character, const ESkillInput& SkillInput, ASkills* skill)
 {
 	if (skill)
 	{
+		setCurrentSkill(skill);
 		skill->SkillExecute(Character);
 		skill->DamageInRadius_Implementation();
 	}

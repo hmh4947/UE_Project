@@ -20,8 +20,8 @@ public:
 	ASwordSmashSkill();
 
 	virtual void DamageInRadius_Implementation() override;
-	virtual void HitCheck() override;
+	virtual void HitCheck_Implementation() override;
 private:
-	void damageArea(float radius);
+	void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
 
 };

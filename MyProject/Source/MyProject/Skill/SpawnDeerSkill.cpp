@@ -8,9 +8,3 @@ ASpawnDeerSkill::ASpawnDeerSkill()
 	
 }
 
-void ASpawnDeerSkill::BeginPlay()
-{
-
-
-}
-

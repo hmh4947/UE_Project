@@ -19,6 +19,7 @@ class MYPROJECT_API USkillComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	USkillComponent();
+
 private:
 	friend class AWarriorCharacter;
 protected:
@@ -31,9 +32,13 @@ public:
 
 	void Skill(ACharacter* Character, const ESkillInput& SkillInput);
 	
+	void setCurrentSkill(ASkills* skill);
+	ASkills* getCurrentSkill() const;
 private:
 	
-	UPROPERTY()
+	ASkills* currentSkill;
+
+	UPROPERTY(EditDefaultsOnly)
 	TArray<TObjectPtr<ASkills>> ActivatableSkills;
 
 	UPROPERTY(EditDefaultsOnly)

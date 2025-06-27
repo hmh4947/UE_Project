@@ -14,16 +14,18 @@ void ASwordSmashSkill::DamageInRadius_Implementation()
 	UE_LOG(LogTemp, Display, TEXT("RADIUS"));
 }
 
-void ASwordSmashSkill::HitCheck()
+void ASwordSmashSkill::HitCheck_Implementation()
 {
-
-    damageArea(300.f);
+	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(GetOwner());
+	FVector SocketPos = Warrior->GetMesh()->GetSocketLocation(TEXT("EndH"));
+	
+	damageArea(1000.f,this->damage, SocketPos, SocketPos);
+ 
 }
 
-void ASwordSmashSkill::damageArea(float radius)
+void ASwordSmashSkill::damageArea(float radius,float damageAmount, FVector startPos, FVector endPos)
 {
-    FVector start = FVector(50.f, 50.f, 50.f);
-    FVector end = FVector(150.f, 150.f, 150.f);
+	Super::damageArea(radius, damageAmount, startPos, endPos);
    
 
 }

@@ -37,6 +37,7 @@ class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInter
 	UPROPERTY(EditAnywhere)
 	USkillComponent* skillComponent;
 
+	void setCurrentSkill(AActor* skill);
 public:
 
 	AWarriorCharacter();
@@ -62,6 +63,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* IA_KeyboardR;
 
+	UPROPERTY(VisibleAnywhere)
+	AActor* CurrentSkill;
+
+	
 	FVector StartL;
 	FVector EndL;
 	FVector Direction;
@@ -154,7 +159,7 @@ public:
 
 
 	bool bMeleeBlocked;
-
+	bool setAttacking(bool isAttacking);
 
 private:
 		UPROPERTY()
@@ -166,6 +171,8 @@ protected:
 	float Damage = 100.f;
 	FHitResult HitTrace;
 	bool bHit;
+
+	
 public:
 	bool isLoseHealth=false;
 

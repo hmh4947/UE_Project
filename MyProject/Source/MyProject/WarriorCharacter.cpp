@@ -19,6 +19,9 @@
 #include "Skill/SkillComponent.h"
 
 
+
+
+
 AWarriorCharacter::AWarriorCharacter()
 {
 	MaxCombo = 2;
@@ -194,6 +197,13 @@ void AWarriorCharacter::MeleeTraceGetHitActor()
 	
 }
 
+bool AWarriorCharacter::setAttacking(bool isAttacking)
+{
+	IsAttacking = isAttacking;
+	return IsAttacking;
+}
+
+
 
 //Warrior Character Input
 void AWarriorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -347,24 +357,40 @@ void AWarriorCharacter::Attack()
 	}
 }
 
+void AWarriorCharacter::setCurrentSkill(AActor* skill)
+{
+	CurrentSkill = skill;
+}
 void AWarriorCharacter::Attack_Q()
 {
+	if (IsAttacking) return;
+	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputQ);
+	setCurrentSkill(skillComponent->getCurrentSkill());
 }
 
 void AWarriorCharacter::Attack_W()
 {
+	if (IsAttacking) return;
+	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputW);
+	setCurrentSkill(skillComponent->getCurrentSkill());
 }
 
 void AWarriorCharacter::Attack_E()
 {
+	if (IsAttacking) return;
+	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputE);
+	setCurrentSkill(skillComponent->getCurrentSkill());
 }
 
 void AWarriorCharacter::Attack_R()
 {
+	if (IsAttacking) return;
+	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputR);
+	setCurrentSkill(skillComponent->getCurrentSkill());
 }
 
 

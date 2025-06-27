@@ -5,64 +5,22 @@
 #include "MyProject/Interface/SkillHitCheckInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyProject/SevargoEnemy.h"
+#include "GameFramework/Actor.h"
+
 
 void USkillHitCheckAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	
 	Super::Notify(MeshComp, Animation);
-
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.0F, FColor::Red, TEXT("Notify"));
-
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	TArray<AActor*> IgnoreActors;
-
-
-	TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
-	ObjectTypes.Add(WorldDynamic);
-
-	FHitResult Result;
-	FName WeaponSocket(TEXT("SwordSocket"));
-
-
-	FVector SocketPos = MeshComp->GetSocketLocation(TEXT("EndH"));
-
-
-	bool bResult = UKismetSystemLibrary::SphereTraceSingleForObjects(
-		GetWorld(),
-		SocketPos,
-		SocketPos,
-		1000.f,
-		ObjectTypes,
-		false,
-		IgnoreActors,
-		EDrawDebugTrace::ForDuration,
-		Result,
-		true);
-
-	if (bResult == true) {
-		if (Result.GetActor())
-		{
-
-			ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(Result.GetActor());
-			if (Enemy != nullptr)
-			{
-
-
-				UEnemyHealthComponent* EnemyHealthComponent = Enemy->FindComponentByClass<UEnemyHealthComponent>();
-				if (EnemyHealthComponent != nullptr)
-				{
-
-
-					EnemyHealthComponent->LoseHealth(100);
-				
-				}
-
-			}
-
-		}
-
+	AActor* Owner = MeshComp->GetOwner();
+	//인터페이스가 정의되었는지 확인하고 실행
+	
+	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(Owner);
+	if (!Warrior||!Warrior->CurrentSkill) return;
+	AActor* OwnerSkill = Warrior->CurrentSkill;
+	if (OwnerSkill && OwnerSkill->GetClass()->ImplementsInterface(USkillHitCheckInterface::StaticClass()))
+	{
+		ISkillHitCheckInterface::Execute_HitCheck(Warrior->CurrentSkill);
 	}
-
-
+	
 }
