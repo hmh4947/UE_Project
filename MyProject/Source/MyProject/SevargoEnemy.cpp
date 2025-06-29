@@ -8,6 +8,8 @@
 
 
 
+
+
 ASevargoEnemy::ASevargoEnemy()
 {
 	//폰이 AI에 의해 컨트롤될 때 기본으로 사용할 AI 컨트롤러 클래스
@@ -32,18 +34,38 @@ void ASevargoEnemy::BeginPlay()
 
 void ASevargoEnemy::OnDeath_Implementation()
 {
-	//if (GetOwner()->Implements<UHealthInterface>()) 
+	FTimerHandle DeathTimerHandle;
+	ABAnim = Cast<USevargoEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if (ABAnim)
 	{
-	//	IHealthInterface::Execute_OnDeath(GetOwner());
+		
+		UE_LOG(LogTemp, Warning, TEXT("DeathMontage!!!!!!!!!!!!!!"));
+
+
+		ABAnim->OnDeath();
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("null AnimInstance "));
+	}
+
+	/*
+	
 			//몬스터 상태 변경
 		EnemyStateEnum = EnemyState::Dead;
 		OnDeath = true;
-		ABAnim->SetDeathState();
-		ABAnim->PlayDeathMontage();
+	
 		//AI 컨트롤러 빙의 해제
 		AutoPossessAI = EAutoPossessAI::Disabled;
-		UE_LOG(LogTemp, Warning, TEXT("Death_Implementation"));
-	}
+		if(Controller)
+		{
+			Controller->OnUnPossess();
+		}
+		
+		ABAnim->OnDeath();
+	*/
 }
 
 void ASevargoEnemy::OnTakeDamage_Implementation()
@@ -51,7 +73,7 @@ void ASevargoEnemy::OnTakeDamage_Implementation()
 
 	AABAIController* EnemyController = Cast<AABAIController>(GetController());
 	if (EnemyController != nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("OnTakeDamage"));
+	
 		EnemyController->UpdateEnemyHealthPercent(EnemyHealthComponent->GetHealthPercent());
 		
 	}
@@ -64,6 +86,7 @@ void ASevargoEnemy::PostInitializeComponents()
 	ABAnim = Cast<USevargoEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 	
 }
+
 
 
 void ASevargoEnemy::AttackStart()

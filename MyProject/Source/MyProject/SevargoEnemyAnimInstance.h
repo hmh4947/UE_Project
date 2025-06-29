@@ -34,6 +34,12 @@ public:
 
 	void OnDeath();
 	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack)
+	bool isDeath;
+
+	UFUNCTION(BlueprintCallable, Category = Attack)
+	void setIsDeath(bool state);
+
 	UFUNCTION()
 	void SetDeathState();
 	
@@ -49,13 +55,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* DeathMontage;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category=State, Meta=(AllowPrivateAccess =true))
-	bool OnDeathState;
 
 	
 	UPROPERTY()
 	class USevargoEnemyAnimInstance* ABAnim;
 
-	UPROPERTY(EditAnyWhere)
-	class ASevargoEnemy* Enemy;
 };

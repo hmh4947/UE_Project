@@ -42,6 +42,8 @@ public:
 	UPROPERTY()
 	class USevargoEnemyAnimInstance* ABAnim;
 
+	
+
 	UFUNCTION(BlueprintCallable, Category="EnemyCharacter")
 	void AttackStart();
 	UFUNCTION(BlueprintCallable, Category = "EnemyCharacter")

@@ -26,11 +26,10 @@ void UEnemyHealthComponent::LoseHealth(float Amount)
 	if (GetOwner()->Implements<UHealthInterface>()) {
 		//인터페이스 안에서 호출해야 하는 함수는 항상 Execute_접두사가 붙는 이름을 가짐
 		IHealthInterface::Execute_OnTakeDamage(GetOwner());
-	//	UE_LOG(LogTemp, Warning, TEXT("LoseHealth"));
 
 		if (EnemyHealth <= 0.f) {
 			EnemyHealth = 0.f;
-			UE_LOG(LogTemp, Warning, TEXT("DEATH"));
+		
 			IHealthInterface::Execute_OnDeath(GetOwner());
 			
 		}

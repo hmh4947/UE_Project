@@ -6,16 +6,17 @@
 #include "HealthComponent.h"
 #include "DrawDebugHelpers.h"
 #include "EnemyHealthComponent.h"
+#include "TimerManager.h"
 USevargoEnemyAnimInstance::USevargoEnemyAnimInstance()
 {
-	OnDeathState = false;
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> SWING_MONTAGE(TEXT("'/Game/Ani/EnemyANI/AnimMontage/AM_Enemy_Swing.AM_Enemy_Swing'"));
+	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SWING_MONTAGE(TEXT("/Game/Ani/EnemyANI/AnimMontage/AM_Enemy_Swing.AM_Enemy_Swing"));
 	if (SWING_MONTAGE.Succeeded())
 	{
 		SwingMontage = SWING_MONTAGE.Object;
 	}
 	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DEATH_MONTAGE(TEXT("'/Game/Ani/EnemyANI/AnimMontage/AM_Enemy_Death.AM_Enemy_Death'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DEATH_MONTAGE(TEXT("/Game/Ani/EnemyANI/AnimMontage/AM_Enemy_Death.AM_Enemy_Death"));
 	if (DEATH_MONTAGE.Succeeded())
 	{
 		DeathMontage = DEATH_MONTAGE.Object;
@@ -41,14 +42,21 @@ void USevargoEnemyAnimInstance::OnSwingAttackMontageEnded(UAnimMontage* Montage,
 
 void USevargoEnemyAnimInstance::PlayDeathMontage()
 {
-	
-	{
-	//	if (!Montage_IsPlaying(DeathMontage))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("OnDeathMontage"));
-			Montage_Play(DeathMontage, 1.0f);
-		}
-	}
+	//FAlphaBlend BlendOut;
+	FTimerHandle DeathTimerHandle;
+
+	float Duration = DeathMontage->GetPlayLength();
+
+	GetWorld()->GetTimerManager().SetTimer(
+		DeathTimerHandle,
+		[this]() {
+
+			setIsDeath(true);
+		},
+		Duration,
+		false
+	);
+
 }
 		
 	
@@ -56,20 +64,26 @@ void USevargoEnemyAnimInstance::PlayDeathMontage()
 
 void USevargoEnemyAnimInstance::OnDeath()
 {
+	
 	auto pawn = TryGetPawnOwner();
 	if (IsValid(pawn))
 	{
-		auto health = Cast<UEnemyHealthComponent>(pawn);
-		health->LoseHealth(0);
+	
 		PlayDeathMontage();
 		UE_LOG(LogTemp, Warning, TEXT("OnDeath"));
+	
+
 	}
+}
+
+void USevargoEnemyAnimInstance::setIsDeath(bool state)
+{
+	isDeath = state;
 }
 
 void USevargoEnemyAnimInstance::SetDeathState()
 {
-	Enemy = Cast<ASevargoEnemy>(TryGetPawnOwner());
-	OnDeathState = Enemy->OnDeath;
+
 }
 
 
