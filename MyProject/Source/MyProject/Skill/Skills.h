@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ESkillInfo.h"
 #include "Skills.generated.h"
 
 UCLASS()
