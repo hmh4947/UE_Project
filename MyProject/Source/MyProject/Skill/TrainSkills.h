@@ -22,12 +22,20 @@ class MYPROJECT_API ATrainSkills : public ASkills
 {
 	GENERATED_BODY()
 public:
-	
+	ESkillType GetSkillType() const;
+	bool GetIsHit() const;
+	int32 getHitCount() const;
+	bool GetActiveSkill() const;
+
+protected:
+	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
+private:
 	UPROPERTY(EditAnywhere,Category="Skill")
 	ESkillType SkillType;
 
 	bool is_hit;
 
 	int32 hit_count;
+
 	
 };

@@ -18,8 +18,10 @@ void ASkills::SkillExecute(ACharacter* Character)
 
 }
 
-void ASkills::DamageInRadius_Implementation()
+
+bool ASkills::GetIsActiveSkill() const
 {
+	return is_active;
 }
 
 // Called when the game starts or when spawned
@@ -37,16 +39,11 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 
 
 
-	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(GetOwner());
-
 	TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 
 	ObjectTypes.Add(WorldDynamic);
 
 	FHitResult Result;
-
-
-	//FVector SocketPos = Warrior->getSwordSocket();
 
 
 	bool bResult = UKismetSystemLibrary::SphereTraceSingleForObjects(
@@ -85,6 +82,25 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 
 	}
 
+}
+
+void ASkills::StartTimer()
+{	
+	
+	is_active = false;
+	GetWorldTimerManager().SetTimer(TimerHandler, this, &ASkills::ActiveSkill, 1.0f, true, coolTime);
+
+}
+
+void ASkills::ActiveSkill()
+{
+	is_active=true;
+
+}
+
+void ASkills::SetCoolTime(float time)
+{
+	this->coolTime = time;
 }
 
 // Called every frame

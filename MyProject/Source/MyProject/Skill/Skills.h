@@ -24,14 +24,14 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	ESkillInput SkillInput;
 	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void DamageInRadius();
+	bool GetIsActiveSkill() const;
+	virtual void StartTimer();
 
-	virtual void DamageInRadius_Implementation();
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	FTimerHandle TimerHandler;
 	
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos);
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
@@ -43,6 +43,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float damage;
 
+	
+	void ActiveSkill();
+	void SetCoolTime(float coolTime);
+	UPROPERTY(VisibleAnywhere)
+	bool is_active;
+
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

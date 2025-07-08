@@ -9,9 +9,11 @@ ASwordSmashSkill::ASwordSmashSkill()
 {
 }
 
-void ASwordSmashSkill::DamageInRadius_Implementation()
+
+void ASwordSmashSkill::BeginPlay()
 {
-	UE_LOG(LogTemp, Display, TEXT("RADIUS"));
+	Super::BeginPlay();
+	ActiveSkill();
 }
 
 void ASwordSmashSkill::HitCheck_Implementation()
@@ -27,6 +29,7 @@ void ASwordSmashSkill::damageArea(float radius,float damageAmount, FVector start
 {
 	Super::damageArea(radius, damageAmount, startPos, endPos);
    
-
+	StartTimer();
 }
+
 

@@ -8,3 +8,9 @@ ASpawnDeerSkill::ASpawnDeerSkill()
 	
 }
 
+void ASpawnDeerSkill::BeginPlay()
+{
+	Super::BeginPlay();
+	ActiveSkill();
+}
+

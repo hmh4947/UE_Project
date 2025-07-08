@@ -9,6 +9,12 @@ AStrikeSkill::AStrikeSkill()
 {
 }
 
+void AStrikeSkill::BeginPlay()
+{
+	Super::BeginPlay();
+	ActiveSkill();
+}
+
 void AStrikeSkill::HitCheck_Implementation()
 {
 	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(GetOwner());

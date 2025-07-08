@@ -9,6 +9,7 @@
 #include "SkillComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInitActivatableSkill);
 class ASkills;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -33,12 +34,20 @@ public:
 	void Skill(ACharacter* Character, const ESkillInput& SkillInput);
 	
 	void setCurrentSkill(ASkills* skill);
+
 	ASkills* getCurrentSkill() const;
+
+
+	const TArray<TObjectPtr<ASkills>>& GetActivatableSkills() const;
+
+	UPROPERTY(BlueprintAssignable)
+	FInitActivatableSkill InitActivatableSkill;
 private:
 	
+	UPROPERTY(VisibleAnywhere)
 	ASkills* currentSkill;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	TArray<TObjectPtr<ASkills>> ActivatableSkills;
 
 	UPROPERTY(EditDefaultsOnly)

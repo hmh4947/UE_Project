@@ -26,7 +26,9 @@ void USkillComponent::BeginPlay()
 		ActivatableSkills[i]->SetOwner(GetOwner());
 
 	}
+	InitActivatableSkill.Broadcast();
 
+	setCurrentSkill(ActivatableSkills[0]);
 }
 
 
@@ -42,10 +44,11 @@ void USkillComponent::Skill(ACharacter* Character, const ESkillInput& SkillInput
 {
 	for (ASkills* Skill : ActivatableSkills)
 	{
-		if (Skill->SkillInput == SkillInput)
+		if (Skill->SkillInput == SkillInput&&Skill->GetIsActiveSkill()) 
 		{
 			startSkill(Character, SkillInput, Skill);
 		}
+		
 	}
 }
 
@@ -59,13 +62,20 @@ ASkills* USkillComponent::getCurrentSkill() const
 	return currentSkill;
 }
 
+const TArray<TObjectPtr<ASkills>>& USkillComponent::GetActivatableSkills() const
+{
+	return ActivatableSkills; 
+}
+
 void USkillComponent::startSkill(ACharacter* Character, const ESkillInput& SkillInput, ASkills* skill)
 {
-	if (skill)
+	if (!skill) return;
+	if(!skill->GetIsActiveSkill()==true) return;
 	{
 		setCurrentSkill(skill);
 		skill->SkillExecute(Character);
-		skill->DamageInRadius_Implementation();
+	//	skill->StartTimer();
+		
 	}
 }
 

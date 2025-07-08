@@ -18,6 +18,7 @@ class MYPROJECT_API ASpellCastSkill : public ASkills, public ISkillHitCheckInter
 public:
 
 	ASpellCastSkill();
+	virtual void BeginPlay() override;
 	virtual void HitCheck_Implementation() override;
 private:
 	void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;

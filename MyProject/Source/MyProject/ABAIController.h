@@ -11,6 +11,8 @@
 /**
  * 
  */
+class USkillComponent;
+class ASkill;
 UCLASS()
 class MYPROJECT_API AABAIController : public AAIController
 {
@@ -31,8 +33,9 @@ public:
 	static const FName HomePosKey;
 	static const FName PatrolPosKey;
 	static const FName TargetKey;
+	virtual void Tick(float DeltaTime) override;
 
-
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -50,8 +53,16 @@ private:
 	class UBlackboardData* BlackboardData;
 
 	class UBlackboardComponent* Blackboard;
-
 	
+	FString SendStateToExternal();
+	int32 SendServer(const FString& JsonObj);
+
+	UFUNCTION()
+	void TestSendRLDecision();
+
+
+	USkillComponent* SkillComponent;
+
 };
 
 

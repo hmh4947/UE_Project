@@ -17,6 +17,8 @@ class MYPROJECT_API AStrikeSkill : public ASkills, public ISkillHitCheckInterfac
 public:
 	AStrikeSkill();
 
+	virtual void BeginPlay() override;
+
 	virtual void HitCheck_Implementation() override;
 
 private:

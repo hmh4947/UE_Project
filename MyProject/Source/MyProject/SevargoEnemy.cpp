@@ -5,6 +5,7 @@
 #include "ClickMovePlayerController.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Actor.h"
+#include "Skill/SkillComponent.h"
 
 
 
@@ -21,6 +22,8 @@ ASevargoEnemy::ASevargoEnemy()
 	SphereComponent->SetSphereRadius(130.f);
 	SphereComponent->SetupAttachment(GetCapsuleComponent());
 	EnemyHealthComponent = CreateDefaultSubobject<UEnemyHealthComponent>(TEXT("EnemyHealthComponent"));
+	SkillComponent = CreateDefaultSubobject<USkillComponent>(TEXT("SkillComponent"));
+	
 	OnDeath = false;
 }
 
@@ -86,6 +89,7 @@ void ASevargoEnemy::PostInitializeComponents()
 	ABAnim = Cast<USevargoEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 	
 }
+
 
 
 

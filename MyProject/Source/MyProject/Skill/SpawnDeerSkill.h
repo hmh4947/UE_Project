@@ -16,6 +16,7 @@ class MYPROJECT_API ASpawnDeerSkill : public ASkills
 	GENERATED_BODY()
 public:
 	ASpawnDeerSkill();
-
+protected:
+	virtual void BeginPlay() override;
 
 };

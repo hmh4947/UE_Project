@@ -15,6 +15,7 @@
 #include "EnemyStateEnum.h"
 #include "SevargoEnemy.generated.h"
 
+class USkillComponent;
 UCLASS()
 
 class MYPROJECT_API ASevargoEnemy : public AEnemyCharacter, public IHealthInterface
@@ -32,9 +33,10 @@ public:
 
 	virtual void OnTakeDamage_Implementation() override;
 
-
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	class UHealthComponent* HealthComponent;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	class UEnemyHealthComponent* EnemyHealthComponent;
 
 	virtual void PostInitializeComponents() override;
@@ -42,7 +44,10 @@ public:
 	UPROPERTY()
 	class USevargoEnemyAnimInstance* ABAnim;
 
-	
+	UPROPERTY(VisibleAnywhere)
+	AActor* CurrentSkill;
+
+
 
 	UFUNCTION(BlueprintCallable, Category="EnemyCharacter")
 	void AttackStart();
@@ -59,10 +64,13 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 	EnemyState EnemyStateEnum;
+
+	UPROPERTY(EditAnyWhere,BlueprintReadOnly)
+	USkillComponent* SkillComponent;
 private:
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;
-
+	
 	
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = AttackCollision, meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* SphereComponent;

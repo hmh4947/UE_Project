@@ -9,6 +9,13 @@ ASpellCastSkill::ASpellCastSkill()
 
 }
 
+void ASpellCastSkill::BeginPlay()
+{
+    Super::BeginPlay();
+    ActiveSkill();
+}
+
+
 void ASpellCastSkill::HitCheck_Implementation()
 {
 	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(GetOwner());
