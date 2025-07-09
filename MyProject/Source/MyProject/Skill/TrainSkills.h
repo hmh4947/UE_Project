@@ -26,9 +26,11 @@ public:
 	bool GetIsHit() const;
 	int32 getHitCount() const;
 	bool GetActiveSkill() const;
-
+	void SkillExecute(APawn* Pawn);
 protected:
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
+
+
 private:
 	UPROPERTY(EditAnywhere,Category="Skill")
 	ESkillType SkillType;

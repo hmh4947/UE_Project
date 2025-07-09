@@ -10,6 +10,7 @@
 /**
  * 
  */
+
 UCLASS()
 class MYPROJECT_API AEnemySwingSkill : public ATrainSkills, public ISkillHitCheckInterface
 {

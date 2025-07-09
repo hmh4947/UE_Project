@@ -4,6 +4,9 @@
 #include "MyProject/Skill/TrainSkills.h"
 #include "MyProject/WarriorCharacter.h"
 #include "MyProject/SevargoEnemy.h"
+#include "GameFramework/Pawn.h"
+#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 
 
 
@@ -25,6 +28,19 @@ int32 ATrainSkills::getHitCount() const
 bool ATrainSkills::GetActiveSkill() const
 {
     return is_active;
+}
+
+void ATrainSkills::SkillExecute(APawn* Pawn)
+{
+	if (!Pawn) return;
+
+	USkeletalMeshComponent* Mesh = Pawn->FindComponentByClass<USkeletalMeshComponent>();
+	if (!Mesh) return;
+	
+	UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
+	if (!AnimInstance) return;
+	
+	AnimInstance->Montage_Play(SkillMontage);
 }
 
 void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos, FVector endPos)
@@ -80,4 +96,5 @@ void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos
 	}
 
 }
+
 

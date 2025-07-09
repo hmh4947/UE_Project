@@ -23,6 +23,7 @@ public:
 
 private:
 	friend class AWarriorCharacter;
+	friend class AABAIController;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -42,6 +43,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FInitActivatableSkill InitActivatableSkill;
+
+	
 private:
 	
 	UPROPERTY(VisibleAnywhere)

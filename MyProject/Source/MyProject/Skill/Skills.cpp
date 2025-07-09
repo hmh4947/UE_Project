@@ -86,9 +86,11 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 
 void ASkills::StartTimer()
 {	
-	
-	is_active = false;
-	GetWorldTimerManager().SetTimer(TimerHandler, this, &ASkills::ActiveSkill, 1.0f, true, coolTime);
+	if(is_active==true)
+	{
+		is_active = false;
+		GetWorldTimerManager().SetTimer(TimerHandler, this, &ASkills::ActiveSkill, 1.0f, true, coolTime);
+	}
 
 }
 

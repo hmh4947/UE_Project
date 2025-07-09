@@ -80,7 +80,7 @@ protected:
 
 
 public:
-
+	void SetIsAttacking(bool isAttacking);
 	void losehealth();
 
 	virtual void Tick(float DeltaTime);

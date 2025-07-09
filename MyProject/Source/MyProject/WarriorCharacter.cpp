@@ -48,6 +48,10 @@ void AWarriorCharacter::OnTakeDamage_Implementation()
 		PlayerController->UpdateHealthPercent(PlayerHealthComponent->GetHealthPercent());
 	}
 }
+void AWarriorCharacter::SetIsAttacking(bool isAttacking)
+{
+	this->IsAttacking = isAttacking;
+}
 void AWarriorCharacter::losehealth()
 {
 	if (HitTrace.GetActor())
@@ -364,7 +368,7 @@ void AWarriorCharacter::setCurrentSkill(AActor* skill)
 void AWarriorCharacter::Attack_Q()
 {
 	if (IsAttacking) return;
-	setAttacking(true);
+	
 	skillComponent->Skill(this, ESkillInput::ESI_InputQ);
 	setCurrentSkill(skillComponent->getCurrentSkill());
 }
@@ -372,7 +376,7 @@ void AWarriorCharacter::Attack_Q()
 void AWarriorCharacter::Attack_W()
 {
 	if (IsAttacking) return;
-	setAttacking(true);
+
 	skillComponent->Skill(this, ESkillInput::ESI_InputW);
 	setCurrentSkill(skillComponent->getCurrentSkill());
 }
@@ -380,7 +384,6 @@ void AWarriorCharacter::Attack_W()
 void AWarriorCharacter::Attack_E()
 {
 	if (IsAttacking) return;
-	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputE);
 	setCurrentSkill(skillComponent->getCurrentSkill());
 }
@@ -388,9 +391,9 @@ void AWarriorCharacter::Attack_E()
 void AWarriorCharacter::Attack_R()
 {
 	if (IsAttacking) return;
-	setAttacking(true);
 	skillComponent->Skill(this, ESkillInput::ESI_InputR);
 	setCurrentSkill(skillComponent->getCurrentSkill());
+	
 }
 
 

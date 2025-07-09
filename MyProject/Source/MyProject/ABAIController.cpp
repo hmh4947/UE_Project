@@ -91,16 +91,14 @@ void AABAIController::Tick(float DeltaTime)
 
 }
 
+
+
 void AABAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	/*APawn* pawn = GetPawn();
-	if (!pawn) return;
-	ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(pawn);
-	if (!Enemy) return;
+	
+	
 
-	Enemy->SkillComponent->InitActivatableSkill.AddDynamic(this, &AABAIController::TestSendRLDecision);
-	*/
 	
 }
 
