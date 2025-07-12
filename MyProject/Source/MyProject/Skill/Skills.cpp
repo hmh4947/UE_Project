@@ -13,9 +13,10 @@ ASkills::ASkills()
 
 void ASkills::SkillExecute(ACharacter* Character)
 {
+	//is_active = true;
 	UAnimInstance* AnimInstane = Character->GetMesh()->GetAnimInstance();
 	AnimInstane->Montage_Play(SkillMontage);
-
+	
 }
 
 
@@ -92,6 +93,11 @@ void ASkills::StartTimer()
 		GetWorldTimerManager().SetTimer(TimerHandler, this, &ASkills::ActiveSkill, 1.0f, true, coolTime);
 	}
 
+}
+
+UAnimMontage* ASkills::GetSkillMontage() const
+{
+	return this->SkillMontage;
 }
 
 void ASkills::ActiveSkill()

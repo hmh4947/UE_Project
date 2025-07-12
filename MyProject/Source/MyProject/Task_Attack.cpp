@@ -28,7 +28,7 @@ EBTNodeResult::Type UTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
 	}
 	
 	IsAttacking = true;
-	//Enemy->SwingAttackAOE();
+
 	return EBTNodeResult::InProgress;
 	
 }

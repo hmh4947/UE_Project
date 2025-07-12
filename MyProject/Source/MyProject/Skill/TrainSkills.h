@@ -6,9 +6,13 @@
 #include "MyProject/Skill/Skills.h"
 #include "TrainSkills.generated.h"
 
+
+
+
 /**
  * 
  */
+DECLARE_DELEGATE_TwoParams(FOnSkillMontageEnd, UAnimMontage*, bool);
 UENUM()
 enum class ESkillType: uint8
 {
@@ -17,7 +21,10 @@ enum class ESkillType: uint8
 
 
 };
+
+
 UCLASS()
+
 class MYPROJECT_API ATrainSkills : public ASkills
 {
 	GENERATED_BODY()
@@ -27,6 +34,9 @@ public:
 	int32 getHitCount() const;
 	bool GetActiveSkill() const;
 	void SkillExecute(APawn* Pawn);
+
+	FOnSkillMontageEnd OnSkillMontageEnd;
+
 protected:
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
 
@@ -38,6 +48,7 @@ private:
 	bool is_hit;
 
 	int32 hit_count;
-
+	TWeakObjectPtr<UBTTask_EnemySwingAttack> CallbackTask;
+	
 	
 };

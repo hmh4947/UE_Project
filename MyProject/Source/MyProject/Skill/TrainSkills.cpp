@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "MyProject/Ai/BTTask_EnemySwingAttack.h"
 
 
 
@@ -32,6 +33,7 @@ bool ATrainSkills::GetActiveSkill() const
 
 void ATrainSkills::SkillExecute(APawn* Pawn)
 {
+	is_active = false;
 	if (!Pawn) return;
 
 	USkeletalMeshComponent* Mesh = Pawn->FindComponentByClass<USkeletalMeshComponent>();
@@ -39,9 +41,26 @@ void ATrainSkills::SkillExecute(APawn* Pawn)
 	
 	UAnimInstance* AnimInstance = Mesh->GetAnimInstance();
 	if (!AnimInstance) return;
+	if (!SkillMontage) return;
+
+
 	
 	AnimInstance->Montage_Play(SkillMontage);
+	// Delegate ¿¬°á
+	FOnMontageEnded MontageEndDelegate;
+	MontageEndDelegate.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
+		{
+			OnSkillMontageEnd.ExecuteIfBound(Montage, bInterrupted);
+		});
+
+	AnimInstance->Montage_SetEndDelegate(MontageEndDelegate, SkillMontage);
+
 }
+
+
+
+
+
 
 void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos, FVector endPos)
 {

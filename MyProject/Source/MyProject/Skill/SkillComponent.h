@@ -40,7 +40,7 @@ public:
 
 
 	const TArray<TObjectPtr<ASkills>>& GetActivatableSkills() const;
-
+	TObjectPtr<ASkills>& GetActivatableSkill(int32 Index);
 	UPROPERTY(BlueprintAssignable)
 	FInitActivatableSkill InitActivatableSkill;
 

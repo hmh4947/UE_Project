@@ -16,34 +16,46 @@ print(f"[server] execute...(port: {PORT})")
 while True:
     client_socket, addr = server_socket.accept()
     print(f"[connect]{addr} to connect")
-    data = client_socket.recv(1024)
-    if not data:
-        break
+    try:
+        data = client_socket.recv(2048)
+        if not data:
+            client_socket.close()
+            continue
 
     # Unreal에서 보낸 JSON 데이터 파싱
-    state_dict = json.loads(data.decode())
+        state_dict = json.loads(data.decode())
     
     # 디버깅용 출력
-    print("Received JSON:", json.dumps(state_dict, indent=2))
+        print("Received JSON:", json.dumps(state_dict, indent=2))
 
     # skills 배열에서 첫 번째 스킬 사용
-    if "skills" in state_dict and len(state_dict["skills"]) > 0:
-        skill = state_dict["skills"][0]
+        skills = state_dict.get("skills", [])
+        if not skills:
+            print("[error] 'skills' 배열이 비어 있습니다.")
+            client_socket.send(b"-1")
+            client_socket.close()
+            continue
 
-        state = np.array([
-            skill["skill_type"],
-            skill["is_hit"],
-            skill["hit_count"],
-            skill["skill_active"]
-        ], dtype=np.float32)
+        # 유동적인 상태 벡터 생성
+        state = []
+        for skill in skills:
+            state.extend([
+                skill.get("skill_type", 0),
+                skill.get("is_hit", 0),
+                skill.get("hit_count", 0),
+                skill.get("skill_active", 0)
+            ])
+        state = np.array(state, dtype=np.float32).reshape(1, -1)  # (1, N)
 
-        # 행동 예측
+    # 모델 예측
         action, _ = model.predict(state)
+        action_index = int(action)
 
-        # 결과 전송
-        client_socket.send(str(int(action)).encode())
-    else:
-        print("[error] 'skills'가 없거나 비어 있음")
-        client_socket.send(b"-1")  # 에러 응답
+        print(f"Predicted Action Index: {action_index}")
+        client_socket.send(str(action_index).encode())
+
+    except Exception as e:
+        print("[exception]", e)
+        client_socket.send(b"-1")
 
     client_socket.close()

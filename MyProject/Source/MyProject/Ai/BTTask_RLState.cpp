@@ -30,13 +30,15 @@ UBTTask_RLState::UBTTask_RLState()
 
 EBTNodeResult::Type UBTTask_RLState::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	UBlackboardComponent* BB = OwnerComp.GetBlackboardComponent();
+	if (!BB) return EBTNodeResult::Failed;
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController) return EBTNodeResult::Failed;
 	AABAIController* EnemyContorller = Cast<AABAIController>(AIController);
 	if(!EnemyContorller)return EBTNodeResult::Failed;
 	APawn* pawn = EnemyContorller->GetPawn();
 	if(!pawn) return EBTNodeResult::Failed;
-	TestSendRLDecision(pawn);
+	TestSendRLDecision(pawn, BB);
 	return EBTNodeResult::Type();
 }
 
@@ -127,11 +129,16 @@ int32 UBTTask_RLState::SendServer(const FString& JsonStr)
 	ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
 	FString ResponseStr = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(Response)));
 
+	// 문자열을 정수로 변환
+	int32 ActionIndex = FCString::Atoi(*ResponseStr);
+
+	// 로그 출력: 정수 결과
+	UE_LOG(LogTemp, Warning, TEXT("Parsed Action Index: %d"), ActionIndex);
 	return FCString::Atoi(*ResponseStr);
 	
 }
 
-void UBTTask_RLState::TestSendRLDecision(APawn* pawn)
+void UBTTask_RLState::TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB)
 {
 	if (!pawn) return;
 	ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(pawn);
@@ -145,15 +152,21 @@ void UBTTask_RLState::TestSendRLDecision(APawn* pawn)
 
 	UE_LOG(LogTemp, Log, TEXT("RL Server to actionindex: %d"), ActionIndex);
 
-	if (ActionIndex < 0) return;
-	
-	const TArray<ASkills*> Skills = Enemy->SkillComponent->GetActivatableSkills();
-	if (Enemy && Skills[ActionIndex])
-	{
-		Skills[ActionIndex]->SkillExecute(Enemy);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("not valid: %d"), ActionIndex);
-	}
+
+	SetReceivedSkillIndex(ActionIndex,BB);
 }
+
+int32 UBTTask_RLState::GetReceivedSkillIndex() const
+{
+	return receivedIndex;
+}
+
+void UBTTask_RLState::SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB)
+{
+	
+	if (!BB) return;
+	BB->SetValueAsInt("MontageIndex", index);
+	UE_LOG(LogTemp, Warning, TEXT("skill_Index: %d"), index);
+}
+
+

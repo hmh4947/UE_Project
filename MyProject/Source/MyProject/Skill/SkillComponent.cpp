@@ -86,6 +86,12 @@ const TArray<TObjectPtr<ASkills>>& USkillComponent::GetActivatableSkills() const
 	return ActivatableSkills; 
 }
 
+TObjectPtr<ASkills>& USkillComponent::GetActivatableSkill(int32 Index)
+{
+	return ActivatableSkills[Index];
+}
+
+
 
 
 

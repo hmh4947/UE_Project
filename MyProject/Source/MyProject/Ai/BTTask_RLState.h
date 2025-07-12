@@ -21,5 +21,11 @@ public:
 
 	FString SendStateToExternal(APawn* pawn);
 	int32 SendServer(const FString& JsonStr);
-	void TestSendRLDecision(APawn* pawn);
+	void TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB);
+	
+	int32 receivedIndex;
+	int32 GetReceivedSkillIndex() const;
+private:
+
+	void SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB);
 };

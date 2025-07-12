@@ -27,6 +27,7 @@ public:
 	bool GetIsActiveSkill() const;
 	virtual void StartTimer();
 
+	UAnimMontage* GetSkillMontage() const;
 	
 protected:
 	// Called when the game starts or when spawned
