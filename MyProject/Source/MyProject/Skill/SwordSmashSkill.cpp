@@ -7,6 +7,14 @@
 
 ASwordSmashSkill::ASwordSmashSkill()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+void ASwordSmashSkill::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	GetRemainingTime();
 }
 
 
@@ -14,6 +22,7 @@ void ASwordSmashSkill::BeginPlay()
 {
 	Super::BeginPlay();
 	ActiveSkill();
+	
 }
 
 void ASwordSmashSkill::HitCheck_Implementation()
@@ -22,14 +31,13 @@ void ASwordSmashSkill::HitCheck_Implementation()
 	FVector SocketPos = Warrior->GetMesh()->GetSocketLocation(TEXT("EndH"));
 	
 	damageArea(1000.f,this->damage, SocketPos, SocketPos);
- 
+	
 }
 
 void ASwordSmashSkill::damageArea(float radius,float damageAmount, FVector startPos, FVector endPos)
 {
 	Super::damageArea(radius, damageAmount, startPos, endPos);
-   
-	StartTimer();
+ 
 }
 
 

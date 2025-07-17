@@ -2,6 +2,8 @@
 
 
 #include "MyProject/Skill/Skills.h"
+#include "MyProject/HUDWidget.h"
+
 
 // Sets default values
 ASkills::ASkills()
@@ -85,18 +87,34 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 
 }
 
+void ASkills::UpdateSkillCool()
+{
+	
+}
+
 void ASkills::StartTimer()
 {	
 	if(is_active==true)
 	{
 		is_active = false;
+		//GetWorldTimerManager().SetTimer(RemainingTimerHandler, this, &ASkills::UpdateSkillCool, 1.0f, true, 1.0f);
 		GetWorldTimerManager().SetTimer(TimerHandler, this, &ASkills::ActiveSkill, 1.0f, true, coolTime);
+		
 	}
 
 }
 
+float ASkills::GetRemainingTime() const
+{
+	
+	
+	float remainingtime = GetWorld()->GetTimerManager().GetTimerRemaining(TimerHandler);
+	return remainingtime;
+}
+
 UAnimMontage* ASkills::GetSkillMontage() const
 {
+	
 	return this->SkillMontage;
 }
 
@@ -105,6 +123,8 @@ void ASkills::ActiveSkill()
 	is_active=true;
 
 }
+
+
 
 void ASkills::SetCoolTime(float time)
 {
@@ -115,6 +135,6 @@ void ASkills::SetCoolTime(float time)
 void ASkills::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 

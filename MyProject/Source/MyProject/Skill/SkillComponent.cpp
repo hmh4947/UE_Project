@@ -4,6 +4,7 @@
 #include "MyProject/Skill/SkillComponent.h"
 #include "MyProject/WarriorCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "MyProject/ClickMovePlayerController.h"
 
 // Sets default values for this component's properties
 USkillComponent::USkillComponent()
@@ -91,22 +92,47 @@ TObjectPtr<ASkills>& USkillComponent::GetActivatableSkill(int32 Index)
 	return ActivatableSkills[Index];
 }
 
-
-
-
+void USkillComponent::UpdateSkillCool()
+{
+	AWarriorCharacter* warriorCharacter = Cast<AWarriorCharacter>(GetOwner());
+	AClickMovePlayerController* PlayerController = Cast<AClickMovePlayerController>(warriorCharacter->GetController());
+	for (ASkills* Skill : ActivatableSkills)
+	{
+	
+		if(Skill->SkillInput==ESkillInput::ESI_InputQ)
+		{
+			PlayerController->UpdateQSkillCoolDown(Skill->GetRemainingTime());
+			
+		}
+		if (Skill->SkillInput == ESkillInput::ESI_InputW)
+		{
+			PlayerController->UpdateWSkillCoolDown(Skill->GetRemainingTime());
+		}
+		if (Skill->SkillInput == ESkillInput::ESI_InputE)
+		{
+			PlayerController->UpdateESkillCoolDown(Skill->GetRemainingTime());
+		}
+		if (Skill->SkillInput == ESkillInput::ESI_InputR)
+		{
+			PlayerController->UpdateRSkillCoolDown(Skill->GetRemainingTime());
+		}
+	}
+}
 
 void USkillComponent::startSkill(ACharacter* Character, const ESkillInput& SkillInput, ASkills* skill)
 {
 	AWarriorCharacter* warriorCharacter = Cast<AWarriorCharacter>(GetOwner());
-	
+	AClickMovePlayerController* PlayerController = Cast<AClickMovePlayerController>(warriorCharacter->GetController());
 	if (!skill) return;
-	if(!skill->GetIsActiveSkill()==true) return;
-	{
-		warriorCharacter->SetIsAttacking(true);
-		setCurrentSkill(skill);
-		skill->SkillExecute(Character);
-		skill->StartTimer();
-		
-	}
+	if(!skill->GetIsActiveSkill()) return;
+	
+	warriorCharacter->SetIsAttacking(true);
+	setCurrentSkill(skill);
+	skill->SkillExecute(Character);
+	skill->StartTimer();
+	UpdateSkillCool();
+	GetWorld()->GetTimerManager().SetTimer(RemainingTimerHandler, this, &USkillComponent::UpdateSkillCool, 1.0f, true, 1.0f);
+	
+	
 }
 

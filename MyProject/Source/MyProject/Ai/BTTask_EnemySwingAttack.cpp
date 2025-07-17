@@ -21,7 +21,7 @@ UBTTask_EnemySwingAttack::UBTTask_EnemySwingAttack()
 	SkillKey.AddObjectFilter(this, GET_MEMBER_NAME_CHECKED(UBTTask_EnemySwingAttack, SkillKey), ASkills::StaticClass());
 
 	IsAttacking = false;
-
+	
 }
 
 
@@ -58,6 +58,7 @@ EBTNodeResult::Type UBTTask_EnemySwingAttack::ExecuteTask(UBehaviorTreeComponent
 	if (!Enemy) return EBTNodeResult::Failed;
 	
 	int32 SkillIndex = BB->GetValueAsInt(IndexKey.SelectedKeyName);
+	if (SkillIndex < 0) return EBTNodeResult::Failed;
 	TObjectPtr<ASkills>& Skillptr = Enemy->SkillComponent->GetActivatableSkill(SkillIndex);
 
 	ATrainSkills* choosedSkill = Cast< ATrainSkills>(Skillptr);

@@ -18,7 +18,7 @@ class MYPROJECT_API ASwordSmashSkill : public ASkills, public ISkillHitCheckInte
 public:
 
 	ASwordSmashSkill();
-
+	virtual void Tick(float DeltaTime) override;
 
 	virtual void HitCheck_Implementation() override;
 private:

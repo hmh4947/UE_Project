@@ -44,7 +44,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FInitActivatableSkill InitActivatableSkill;
 
-	
+	void UpdateSkillCool();
+	FTimerHandle RemainingTimerHandler;
 private:
 	
 	UPROPERTY(VisibleAnywhere)
@@ -55,6 +56,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<ASkills>> StartSkillsClass;
+
 
 	void startSkill(ACharacter* Character, const ESkillInput& SkillInput, ASkills* skill);
 };

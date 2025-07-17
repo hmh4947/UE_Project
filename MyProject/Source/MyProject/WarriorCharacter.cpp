@@ -371,6 +371,7 @@ void AWarriorCharacter::Attack_Q()
 	
 	skillComponent->Skill(this, ESkillInput::ESI_InputQ);
 	setCurrentSkill(skillComponent->getCurrentSkill());
+
 }
 
 void AWarriorCharacter::Attack_W()
@@ -394,6 +395,7 @@ void AWarriorCharacter::Attack_R()
 	skillComponent->Skill(this, ESkillInput::ESI_InputR);
 	setCurrentSkill(skillComponent->getCurrentSkill());
 	
+
 }
 
 

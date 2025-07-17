@@ -37,12 +37,7 @@ AClickMovePlayerController::AClickMovePlayerController()
 	}
 }
 
-void AClickMovePlayerController::UpdateHealthPercent(float HealthPercent)
-{
-	if (HUDWidget != nullptr) {
-		HUDWidget->UpdateHealthPercent(HealthPercent);
-	}
-}
+
 
 void AClickMovePlayerController::BeginPlay()
 {
@@ -68,7 +63,41 @@ void AClickMovePlayerController::BeginPlay()
 	}
 	
 }
+void AClickMovePlayerController::UpdateHealthPercent(float HealthPercent)
+{
+	if (HUDWidget != nullptr) {
+		HUDWidget->UpdateHealthPercent(HealthPercent);
+	}
+}
 
+void AClickMovePlayerController::UpdateQSkillCoolDown(float Percent)
+{
+	if (!HUDWidget) return;
+	UE_LOG(LogTemp, Error, (TEXT("%d")), round(Percent));
+	HUDWidget->UpdateQSkillPercent(round(Percent));
+}
+
+void AClickMovePlayerController::UpdateWSkillCoolDown(float Percent)
+{
+	if (!HUDWidget) return;
+
+	HUDWidget->UpdateWSkillPercent(round(Percent));
+}
+
+void AClickMovePlayerController::UpdateESkillCoolDown(float Percent)
+{
+	if (!HUDWidget) return;
+
+	HUDWidget->UpdateESkillPercent(round(Percent));
+}
+
+void AClickMovePlayerController::UpdateRSkillCoolDown(float Percent)
+{
+	if (!HUDWidget) return;
+
+	HUDWidget->UpdateRSkillPercent(round(Percent));
+
+}
 void AClickMovePlayerController::InputRightMouseButtonPressed()
 {
 	WarriorCharacterInstance->GetCharacterMovement()->MaxWalkSpeed=600.f;

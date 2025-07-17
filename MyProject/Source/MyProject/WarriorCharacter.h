@@ -161,9 +161,9 @@ public:
 	bool bMeleeBlocked;
 	bool setAttacking(bool isAttacking);
 
-private:
-		UPROPERTY()
-		class UHUDWidget* HUDWidget;
+
+	UPROPERTY()
+	class UHUDWidget* HUDWidget;
 protected:
 	//적에게 입힐 데미지
 

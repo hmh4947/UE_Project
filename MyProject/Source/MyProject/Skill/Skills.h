@@ -7,7 +7,9 @@
 #include "ESkillInfo.h"
 #include "Skills.generated.h"
 
+
 UCLASS()
+
 class MYPROJECT_API ASkills : public AActor
 {
 	GENERATED_BODY()
@@ -26,17 +28,18 @@ public:
 	
 	bool GetIsActiveSkill() const;
 	virtual void StartTimer();
-
+	virtual float GetRemainingTime() const;
 	UAnimMontage* GetSkillMontage() const;
-	
+	void UpdateSkillCool();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	FTimerHandle TimerHandler;
-	
+	//FTimerHandle RemainingTimerHandler;
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos);
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> SkillMontage;
+
 
 	UPROPERTY(EditDefaultsOnly)
 	float coolTime;
@@ -46,6 +49,7 @@ protected:
 
 	
 	void ActiveSkill();
+	
 	void SetCoolTime(float coolTime);
 	UPROPERTY(VisibleAnywhere)
 	bool is_active;
