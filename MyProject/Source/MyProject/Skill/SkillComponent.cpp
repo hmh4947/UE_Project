@@ -101,20 +101,21 @@ void USkillComponent::UpdateSkillCool()
 	
 		if(Skill->SkillInput==ESkillInput::ESI_InputQ)
 		{
-			PlayerController->UpdateQSkillCoolDown(Skill->GetRemainingTime());
+		
+			PlayerController->UpdateQSkillCoolDown(Skill->GetRemainingTime(),Skill);
 			
 		}
 		if (Skill->SkillInput == ESkillInput::ESI_InputW)
 		{
-			PlayerController->UpdateWSkillCoolDown(Skill->GetRemainingTime());
+			PlayerController->UpdateWSkillCoolDown(Skill->GetRemainingTime(), Skill);
 		}
 		if (Skill->SkillInput == ESkillInput::ESI_InputE)
 		{
-			PlayerController->UpdateESkillCoolDown(Skill->GetRemainingTime());
+			PlayerController->UpdateESkillCoolDown(Skill->GetRemainingTime(), Skill);
 		}
 		if (Skill->SkillInput == ESkillInput::ESI_InputR)
 		{
-			PlayerController->UpdateRSkillCoolDown(Skill->GetRemainingTime());
+			PlayerController->UpdateRSkillCoolDown(Skill->GetRemainingTime(), Skill);
 		}
 	}
 }

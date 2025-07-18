@@ -3,6 +3,7 @@
 
 #include "HUDWidget.h"
 #include "Components/ProgressBar.h"
+#include "MyProject/Skill/SkillComponent.h"
 
 
 void UHUDWidget::UpdateHealthPercent(float HealthPercent)
@@ -16,56 +17,95 @@ void UHUDWidget::UpdateEnemyHealthPercent(float HealthPercent)
 	
 }
 
-void UHUDWidget::UpdateQSkillPercent(int32 Percent)
+void UHUDWidget::UpdateQSkillPercent(float Percent, ASkills* Skill)
 {
-	SkillCool_Q->SetVisibility(ESlateVisibility::Visible);
+	if(!Skill) return;
 	
-	Skill_Q->SetPercent(Percent);
-	SkillCool_Q->SetText(FText::AsNumber(Percent));
-	if (Percent <= 0)
+	if (Skill->GetIsActiveSkill())
 	{
 		SkillCool_Q->SetVisibility(ESlateVisibility::Hidden);
-		
-	}
-}
 
-void UHUDWidget::UpdateWSkillPercent(int32 Percent)
-{
-	SkillCool_W->SetVisibility(ESlateVisibility::Visible);
+	}
+	else {
+		SkillCool_Q->SetVisibility(ESlateVisibility::Visible);
+		float getPercent = Percent / Skill->GetCoolTime();
+		Skill_Q->SetPercent(getPercent);
+		float round_percent = round(Percent);
+		if (round_percent == -0.f)
+		{
+			SkillCool_Q->SetVisibility(ESlateVisibility::Hidden);
+		}
+		SkillCool_Q->SetText(FText::AsNumber(round_percent));
+	}
+	
+
 
 	
-	Skill_W->SetPercent(Percent);
-	SkillCool_W->SetText(FText::AsNumber(Percent));
-	if (Percent <= 0)
+}
+
+void UHUDWidget::UpdateWSkillPercent(float Percent,ASkills* Skill)
+{
+	if(!Skill) return;
+	if (Skill->GetIsActiveSkill())
 	{
 		SkillCool_W->SetVisibility(ESlateVisibility::Hidden);
 
 	}
+	else {
+		SkillCool_W->SetVisibility(ESlateVisibility::Visible);
+		float getPercent = Percent / Skill->GetCoolTime();
+		Skill_W->SetPercent(getPercent);
+		float round_percent = round(Percent);
+		if (round_percent == -0.f)
+		{
+			SkillCool_W->SetVisibility(ESlateVisibility::Hidden);
+		}
+		SkillCool_W->SetText(FText::AsNumber(round_percent));
+
+	}
+
 }
 
-void UHUDWidget::UpdateESkillPercent(int32 Percent)
+void UHUDWidget::UpdateESkillPercent(float Percent, ASkills* Skill)
 {
-	SkillCool_E->SetVisibility(ESlateVisibility::Visible);
-	
-	
-	Skill_E->SetPercent(Percent);
-	SkillCool_E->SetText(FText::AsNumber(Percent));
-	if (Percent <= 0)
+	if (!Skill) return;
+	if (Skill->GetIsActiveSkill())
 	{
 		SkillCool_E->SetVisibility(ESlateVisibility::Hidden);
 
 	}
+	else {
+		SkillCool_E->SetVisibility(ESlateVisibility::Visible);
+		float getPercent = Percent / Skill->GetCoolTime();
+		Skill_E->SetPercent(getPercent);
+		float round_percent = round(Percent);
+		if (round_percent == -0.f)
+		{
+			SkillCool_E->SetVisibility(ESlateVisibility::Hidden);
+		}
+		SkillCool_E->SetText(FText::AsNumber(round_percent));
+
+	}
 }
 
-void UHUDWidget::UpdateRSkillPercent(int32 Percent)
+void UHUDWidget::UpdateRSkillPercent(float Percent, ASkills* Skill)
 {
-	SkillCool_R->SetVisibility(ESlateVisibility::Visible);
-	
-	Skill_R->SetPercent(Percent);
-	SkillCool_R->SetText(FText::AsNumber(Percent));
-	if (Percent <= 0)
+	if (!Skill) return;
+	if (Skill->GetIsActiveSkill())
 	{
 		SkillCool_R->SetVisibility(ESlateVisibility::Hidden);
+
+	}
+	else {
+		SkillCool_R->SetVisibility(ESlateVisibility::Visible);
+		float getPercent = Percent / Skill->GetCoolTime();
+		Skill_R->SetPercent(getPercent);
+		float round_percent = round(Percent);
+		if (round_percent == -0.f)
+		{
+			SkillCool_R->SetVisibility(ESlateVisibility::Hidden);
+		}
+		SkillCool_R->SetText(FText::AsNumber(round_percent));
 
 	}
 }

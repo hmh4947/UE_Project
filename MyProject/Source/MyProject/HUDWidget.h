@@ -10,6 +10,7 @@
 /**
  * 
  */
+class ASkills;
 UCLASS()
 class MYPROJECT_API UHUDWidget : public UUserWidget
 {
@@ -49,10 +50,11 @@ public:
 
 	void UpdateEnemyHealthPercent(float HealthPercent);
 
-	void UpdateQSkillPercent(int32 Percent);
-	void UpdateWSkillPercent(int32 Percent);
-	void UpdateESkillPercent(int32 Percent);
-	void UpdateRSkillPercent(int32 Percent);
+	void UpdateQSkillPercent(float Percent, ASkills* Skill);
+	void UpdateWSkillPercent(float Percent, ASkills* Skill);
+	void UpdateESkillPercent(float  Percent, ASkills* Skill);
+	void UpdateRSkillPercent(float  Percent, ASkills* Skill);
+
 
 	
 private:

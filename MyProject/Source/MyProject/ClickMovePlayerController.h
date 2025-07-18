@@ -81,10 +81,10 @@ public:
 
 	
 	void UpdateHealthPercent(float HealthPercent);
-	void UpdateQSkillCoolDown(float Percent);
-	void UpdateWSkillCoolDown(float Percent);
-	void UpdateESkillCoolDown(float Percent);
-	void UpdateRSkillCoolDown(float Percent);
+	void UpdateQSkillCoolDown(float Percent, ASkills* Skill);
+	void UpdateWSkillCoolDown(float Percent, ASkills* Skill);
+	void UpdateESkillCoolDown(float Percent, ASkills* Skill);
+	void UpdateRSkillCoolDown(float Percent, ASkills* Skill);
 	FVector Start;
 
 	FVector End;

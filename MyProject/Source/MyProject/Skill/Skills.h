@@ -26,6 +26,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	ESkillInput SkillInput;
 	
+	float GetCoolTime() const;
 	bool GetIsActiveSkill() const;
 	virtual void StartTimer();
 	virtual float GetRemainingTime() const;
@@ -35,7 +36,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	FTimerHandle TimerHandler;
-	//FTimerHandle RemainingTimerHandler;
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos);
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> SkillMontage;

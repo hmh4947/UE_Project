@@ -22,6 +22,11 @@ void ASkills::SkillExecute(ACharacter* Character)
 }
 
 
+float ASkills::GetCoolTime() const
+{
+	return this->coolTime;
+}
+
 bool ASkills::GetIsActiveSkill() const
 {
 	return is_active;

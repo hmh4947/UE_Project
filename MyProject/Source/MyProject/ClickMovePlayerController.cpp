@@ -70,32 +70,32 @@ void AClickMovePlayerController::UpdateHealthPercent(float HealthPercent)
 	}
 }
 
-void AClickMovePlayerController::UpdateQSkillCoolDown(float Percent)
+void AClickMovePlayerController::UpdateQSkillCoolDown(float Percent,ASkills* Skill)
 {
 	if (!HUDWidget) return;
 	UE_LOG(LogTemp, Error, (TEXT("%d")), round(Percent));
-	HUDWidget->UpdateQSkillPercent(round(Percent));
+	HUDWidget->UpdateQSkillPercent(Percent, Skill);
 }
 
-void AClickMovePlayerController::UpdateWSkillCoolDown(float Percent)
+void AClickMovePlayerController::UpdateWSkillCoolDown(float Percent, ASkills* Skill)
 {
 	if (!HUDWidget) return;
 
-	HUDWidget->UpdateWSkillPercent(round(Percent));
+	HUDWidget->UpdateWSkillPercent(Percent, Skill);
 }
 
-void AClickMovePlayerController::UpdateESkillCoolDown(float Percent)
+void AClickMovePlayerController::UpdateESkillCoolDown(float Percent, ASkills* Skill)
 {
 	if (!HUDWidget) return;
 
-	HUDWidget->UpdateESkillPercent(round(Percent));
+	HUDWidget->UpdateESkillPercent(Percent, Skill);
 }
 
-void AClickMovePlayerController::UpdateRSkillCoolDown(float Percent)
+void AClickMovePlayerController::UpdateRSkillCoolDown(float Percent, ASkills* Skill)
 {
 	if (!HUDWidget) return;
 
-	HUDWidget->UpdateRSkillPercent(round(Percent));
+	HUDWidget->UpdateRSkillPercent(Percent, Skill);
 
 }
 void AClickMovePlayerController::InputRightMouseButtonPressed()
