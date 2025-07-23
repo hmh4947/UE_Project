@@ -3,3 +3,8 @@
 
 #include "MyProject/Skill/EnemyAOESkill.h"
 
+void AEnemyAOESkill::BeginPlay()
+{
+	Super::BeginPlay();
+	ActiveSkill();
+}

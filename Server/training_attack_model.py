@@ -7,31 +7,21 @@ from math import log
 class AttackEnv(gym.Env):
     def __init__(self):
         super(AttackEnv, self).__init__()
-         # 상태 공간 정의: [  skill_type,is_hit, hit_count, skill_active]
-        #self.observation_space = gym.spaces.Box(
-        #    low=np.array([0, 0, 0, 0], dtype=np.float32),
-        #    high=np.array([1, 1, 100, 1], dtype=np.float32),
-        #    dtype=np.float32
-        #)
+         # 상태 공간 정의: 
         self.num_skills = 3
+        self.total_state_size = 4 * self.num_skills
         self.observation_space = gym.spaces.Box(
-            low=np.zeros(4 * self.num_skills, dtype=np.float32),
+            low=np.zeros(self.total_state_size, dtype=np.float32),
             high=np.array([1, 1, 100, 1] * self.num_skills, dtype=np.float32),
             dtype=np.float32
             )
 
         self.action_space = gym.spaces.Discrete(self.num_skills)  # 0, 1 (근거리, 원거리)
-
+        self.total_reward = 0.0
+        self.state = np.zeros(self.total_state_size, dtype=np.float32)
     # 환경 초기화: 상태를 랜덤하게 설정하고 반환
     def reset(self):
-        self.skills = []
-        for _ in range(self.num_skills):
-            skill_type = np.random.randint(0, 2)      # 근거리 or 원거리
-            is_hit = np.random.randint(0, 2)          # 적중 여부
-            hit_count = 0
-            skill_active = np.random.randint(0, 2)    # 사용 가능 여부
-            self.skills.extend([skill_type, is_hit, hit_count, skill_active])
-        self.state = np.array(self.skills, dtype=np.float32)
+        self.total_reward = 0.0
         return self.state
     
    # 하나의 행동을 수행 → 다음 상태, 보상, 종료 여부, 기타 정보 반환

@@ -13,5 +13,8 @@ UCLASS()
 class MYPROJECT_API AEnemyAOESkill : public ATrainSkills
 {
 	GENERATED_BODY()
-	
+public:
+
+
+	virtual void BeginPlay()override;
 };

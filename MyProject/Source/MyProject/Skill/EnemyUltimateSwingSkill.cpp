@@ -3,3 +3,8 @@
 
 #include "MyProject/Skill/EnemyUltimateSwingSkill.h"
 
+void AEnemyUltimateSwingSkill::BeginPlay()
+{
+	Super::BeginPlay();
+	ActiveSkill();
+}

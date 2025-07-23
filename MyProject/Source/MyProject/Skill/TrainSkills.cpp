@@ -31,9 +31,11 @@ bool ATrainSkills::GetActiveSkill() const
     return is_active;
 }
 
+
+
 void ATrainSkills::SkillExecute(APawn* Pawn)
 {
-	is_active = false;
+	
 	if (!Pawn) return;
 
 	USkeletalMeshComponent* Mesh = Pawn->FindComponentByClass<USkeletalMeshComponent>();
@@ -54,13 +56,18 @@ void ATrainSkills::SkillExecute(APawn* Pawn)
 		});
 
 	AnimInstance->Montage_SetEndDelegate(MontageEndDelegate, SkillMontage);
-
+	
 }
+void ATrainSkills::StartTimer()
+{
 
+	if (is_active == true)
+	{
+		is_active = false;
+		GetWorldTimerManager().SetTimer(EnemySkillTimerHandler, this, &ATrainSkills::ActiveSkill, 1.0f, true, coolTime);
 
-
-
-
+	}
+}
 
 void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos, FVector endPos)
 {
@@ -114,6 +121,11 @@ void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos
 
 	}
 
+}
+
+void ATrainSkills::ActiveSkill()
+{
+	this->is_active = true;
 }
 
 

@@ -14,5 +14,8 @@ UCLASS()
 class MYPROJECT_API AEnemyUltimateSwingSkill : public ATrainSkills, public ISkillHitCheckInterface
 {
 	GENERATED_BODY()
+
+public:
+	virtual void BeginPlay() override;
 	
 };

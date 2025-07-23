@@ -11,7 +11,8 @@ AEnemySwingSkill::AEnemySwingSkill()
 
 void AEnemySwingSkill::BeginPlay()
 {
-	
+	Super::BeginPlay();
+	ActiveSkill();
 }
 
 void AEnemySwingSkill::HitCheck_Implementation()

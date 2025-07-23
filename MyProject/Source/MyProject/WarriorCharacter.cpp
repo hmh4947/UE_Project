@@ -67,7 +67,7 @@ void AWarriorCharacter::losehealth()
 
 				UE_LOG(LogTemp, Warning, TEXT("Hit ActorResult: %s"), *HitTrace.GetActor()->GetName());
 
-				EnemyHealthComponent->LoseHealth(500);
+				EnemyHealthComponent->LoseHealth(10);
 				
 			}
 

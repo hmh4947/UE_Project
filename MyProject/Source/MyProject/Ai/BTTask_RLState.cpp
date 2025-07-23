@@ -26,6 +26,7 @@
 UBTTask_RLState::UBTTask_RLState()
 {
 	NodeName = TEXT("RLState");
+	TotalRewardArray.Empty();
 }
 
 EBTNodeResult::Type UBTTask_RLState::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -49,9 +50,13 @@ void UBTTask_RLState::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 FString UBTTask_RLState::SendStateToExternal(APawn* pawn)
 {
 	TArray<TSharedPtr<FJsonValue>> SkillArray;
+
 	FString ServerIP = TEXT("127.0.0.1");
 	int32 ServerPort = 9999;
 	
+	
+	int32 SkillIndex = 0;
+
 	if (pawn)
 	{
 		ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(pawn);
@@ -62,14 +67,20 @@ FString UBTTask_RLState::SendStateToExternal(APawn* pawn)
 
 				if (ATrainSkills* TrainSkill = Cast<ATrainSkills>(Skill))
 				{
-
+					float Reward = 0.0f;
+					if(TotalRewardArray.IsValidIndex(SkillIndex))
+					{
+						Reward = TotalRewardArray[SkillIndex];
+					}
 					TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+					JsonObject->SetNumberField(TEXT("total_reward"), Reward);
 					JsonObject->SetNumberField(TEXT("skill_type"), static_cast<int32>(TrainSkill->GetSkillType()));
 					JsonObject->SetNumberField(TEXT("hit_count"), TrainSkill->getHitCount());
 					JsonObject->SetNumberField(TEXT("is_hit"), TrainSkill->GetIsHit());
 					JsonObject->SetNumberField(TEXT("skill_active"), TrainSkill->GetActiveSkill() ? 1 : 0);
 
 					SkillArray.Add(MakeShareable(new FJsonValueObject(JsonObject)));
+					SkillIndex++;
 				}
 
 			}
@@ -121,21 +132,49 @@ int32 UBTTask_RLState::SendServer(const FString& JsonStr)
 	Socket->Send((uint8*)Convert.Get(), Convert.Length(), BytesSent);
 
 	// 서버 응답 받기 (예: "1", "0" 등)
-	uint8 Response[128] = {};
+	TArray<uint8> Response;
+	Response.SetNumUninitialized(2048);
 	int32 BytesRead = 0;
-	Socket->Recv(Response, sizeof(Response), BytesRead);
+	Socket->Recv(Response.GetData(), Response.Num(), BytesRead);
 
 	Socket->Close();
 	ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
-	FString ResponseStr = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(Response)));
-
 	// 문자열을 정수로 변환
-	int32 ActionIndex = FCString::Atoi(*ResponseStr);
+	FString ResponseStr = FString(ANSI_TO_TCHAR(reinterpret_cast<const char*>(Response.GetData())));
+	ResponseStr = ResponseStr.Left(BytesRead);
+	TSharedPtr<FJsonObject> JsonParsed;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseStr);
 
-	// 로그 출력: 정수 결과
-	UE_LOG(LogTemp, Warning, TEXT("Parsed Action Index: %d"), ActionIndex);
-	return FCString::Atoi(*ResponseStr);
-	
+	if (!FJsonSerializer::Deserialize(Reader, JsonParsed) || !JsonParsed.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to parse JSON response"));
+		UE_LOG(LogTemp, Warning, TEXT("Raw Response: %s"), *ResponseStr);
+		UE_LOG(LogTemp, Warning, TEXT("BytesRead: %d"), BytesRead);
+
+		return -1;
+	}
+
+	int32 ActionIndex = JsonParsed->GetIntegerField(TEXT("action"));
+	const TArray<TSharedPtr<FJsonValue>> RewardArray = JsonParsed->GetArrayField(TEXT("reward"));
+
+	for (int32 i = 0; i < RewardArray.Num(); ++i)
+	{
+		float Reward = static_cast<float>(RewardArray[i]->AsNumber());
+
+		if (TotalRewardArray.IsValidIndex(i))
+		{
+			//누적
+			TotalRewardArray[i] += Reward;
+		}
+		else
+		{
+			TotalRewardArray.Add(Reward);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("Reward[%d]: %f"), i, TotalRewardArray[i]);
+	}
+	return ActionIndex;
+
 }
 
 void UBTTask_RLState::TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB)
@@ -147,8 +186,6 @@ void UBTTask_RLState::TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB)
 	FString JsonString = SendStateToExternal(pawn);
 	int32 ActionIndex = SendServer(JsonString);
 
-	//APawn* ControlledPawn = GetPawn();
-	//ACharacter* ControlledCharacter = Cast<ACharacter>(GetPawn());
 
 	UE_LOG(LogTemp, Log, TEXT("RL Server to actionindex: %d"), ActionIndex);
 
@@ -159,6 +196,11 @@ void UBTTask_RLState::TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB)
 int32 UBTTask_RLState::GetReceivedSkillIndex() const
 {
 	return receivedIndex;
+}
+
+void UBTTask_RLState::UpdateReward(float reward)
+{
+	TotalReward += reward;
 }
 
 void UBTTask_RLState::SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB)

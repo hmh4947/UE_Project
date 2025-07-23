@@ -21,21 +21,16 @@ public:
 
 	virtual void HitCheck_Implementation() override;
 	
-	void MeleeTrace();
+	void MeleeTrace() override;
 
-	bool bMeleeBlocked;
+	
 
+	void LoseHealth() override;
 
-	TArray<FVector> MeleeTracePrevious;
-	TArray<FVector> MeleeTraceCurrent;
-
-	TArray<FHitResult> HitResults;
-	FHitResult HitTrace;
-	bool bHit;
-
+	
 private:
 	void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
-	bool isLoseHealth;
+	
 
 
 };

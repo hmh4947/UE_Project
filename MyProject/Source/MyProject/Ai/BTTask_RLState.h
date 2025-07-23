@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS()
 class MYPROJECT_API UBTTask_RLState : public UBTTaskNode
 {
@@ -18,6 +19,8 @@ public:
 	UBTTask_RLState();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	
+	float TotalReward = 0.0f;
 
 	FString SendStateToExternal(APawn* pawn);
 	int32 SendServer(const FString& JsonStr);
@@ -26,6 +29,7 @@ public:
 	int32 receivedIndex;
 	int32 GetReceivedSkillIndex() const;
 private:
-
+	TArray<float> TotalRewardArray;
+	void UpdateReward(float reward);
 	void SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB);
 };

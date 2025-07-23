@@ -31,7 +31,6 @@ public:
 	virtual void StartTimer();
 	virtual float GetRemainingTime() const;
 	UAnimMontage* GetSkillMontage() const;
-	void UpdateSkillCool();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -48,15 +47,35 @@ protected:
 	float damage;
 
 	
-	void ActiveSkill();
+	virtual void ActiveSkill();
 	
 	void SetCoolTime(float coolTime);
 	UPROPERTY(VisibleAnywhere)
 	bool is_active;
 
+/// <summary>
+/// ///////////////////
+/// 	
+
 	
+/// </summary>
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+
+	virtual void MeleeTrace();
+	bool bMeleeBlocked;
+
+	TArray<FVector> MeleeTracePrevious;
+	TArray<FVector> MeleeTraceCurrent;
+
+	TArray<FHitResult> HitResults;
+	FHitResult HitTrace;
+	bool bHit;
+	bool isLoseHealth;
+	virtual void LoseHealth();
+	bool GetIsLoseHealth()const;
+	void SetIsLoseHealth(bool islosehealth);
 };

@@ -96,12 +96,12 @@ void USkillComponent::UpdateSkillCool()
 {
 	AWarriorCharacter* warriorCharacter = Cast<AWarriorCharacter>(GetOwner());
 	AClickMovePlayerController* PlayerController = Cast<AClickMovePlayerController>(warriorCharacter->GetController());
+
 	for (ASkills* Skill : ActivatableSkills)
 	{
 	
 		if(Skill->SkillInput==ESkillInput::ESI_InputQ)
 		{
-		
 			PlayerController->UpdateQSkillCoolDown(Skill->GetRemainingTime(),Skill);
 			
 		}
@@ -124,9 +124,10 @@ void USkillComponent::startSkill(ACharacter* Character, const ESkillInput& Skill
 {
 	AWarriorCharacter* warriorCharacter = Cast<AWarriorCharacter>(GetOwner());
 	AClickMovePlayerController* PlayerController = Cast<AClickMovePlayerController>(warriorCharacter->GetController());
+
 	if (!skill) return;
 	if(!skill->GetIsActiveSkill()) return;
-	
+
 	warriorCharacter->SetIsAttacking(true);
 	setCurrentSkill(skill);
 	skill->SkillExecute(Character);

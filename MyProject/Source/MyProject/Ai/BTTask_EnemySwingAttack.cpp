@@ -107,10 +107,13 @@ void UBTTask_EnemySwingAttack::SetMontage(APawn* Pawn, ATrainSkills* skill)
 {
 	
 	
-	
-	skill->SkillExecute(Pawn);
 
 	
+	skill->SkillExecute(Pawn);
+	
+	skill->StartTimer();
+
+	UE_LOG(LogTemp, Warning, TEXT("Start Timer"));
 
 
 }
