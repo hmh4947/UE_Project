@@ -9,7 +9,7 @@ public class MyProject : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "EnhancedInput", "Niagara","GameplayTasks","UMG",
-															"Json","JsonUtilities","Networking","Sockets"});
+															"Json","JsonUtilities","Networking","Sockets","Slate","SlateCore"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

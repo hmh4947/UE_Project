@@ -7,91 +7,92 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/VerticalBox.h"
+#include "MyProject/UI/ChoicesWidget.h"
+#include "MyProject/UI/DialogChoiceAsset.h"
+#include "MyProject/UI/DialogNodeAsset.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+
+#include "Styling/SlateBrush.h"
+
+
+
 
 void UDialogWidget::NativeConstruct()
 {
 	
 	Super::NativeConstruct();
-	//위젯 블루프린트의 버튼을 이름으로 가져오기
-	NextButton = Cast<UButton>(GetWidgetFromName("NextButton"));
-	
 
-	//델리게이트 등록
-	NextButton->OnClicked.AddDynamic(this, &UDialogWidget::NextButtonCallback);
-
-
-	if (!DialogClass) return;
-	DialogActor=GetWorld()->SpawnActor<ADialog>(DialogClass);
-
-	TextArrayIndex = 0;
-	SetText();
-	CreateBranchButton(TextArrayIndex);
-}
-
-void UDialogWidget::EndDialog()
-{
-	
-	
-
-	TextArrayIndex++;
-	int32 Length = DialogActor->GetTextArrayLength();
-	if (TextArrayIndex >= Length)
-		TextArrayIndex = 0;
-		
-	SetText();
+	ShowNode(RootNode);
 	
 }
 
-void UDialogWidget::NextButtonCallback()
+void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 {
-	
-	EndDialog();
-}
+	ChoiceContainer->ClearChildren();
 
-void UDialogWidget::CharacterNameCallback()
-{
-	SetText();
-}
-
-void UDialogWidget::SetText()
-{
-	FText Text = DialogActor->GetTextArray(TextArrayIndex);
-	FText TextName = DialogActor->Dialog[TextArrayIndex].Name;
-	UTexture2D* Image = DialogActor->Dialog[TextArrayIndex].Image;
-	//formatString
-	FText ResultMessage = FText::Format(NSLOCTEXT("Dialog", "FormatKey", "{0}"),  
-		Text                             // 치환할 값
-	);
-
-
-	DialogText->SetText(ResultMessage);
-	Name->SetText(TextName);
-	CharacterImage->SetBrushFromTexture(Image);
-
-}
-
-void UDialogWidget::CreateButton(FText ButtonText)
-{
-	UButton* Button = NewObject<UButton>(this, UButton::StaticClass());
-	UTextBlock* Text = NewObject<UTextBlock>(this, UTextBlock::StaticClass());
-
-	
-	Button->AddChild(Text);
-	ChoiceVerticalBox->AddChild(Button);
-	Text->SetText(ButtonText);
-}
-
-void UDialogWidget::CreateBranchButton(int32 index)
-{
-	
-	
-	for (int32 i = 0; i < DialogActor->GetBranchDialogLength(index); i++)
+	for (UDialogChoiceAsset* Choice : Node->Choices)
 	{
-		FDialogBranch& DialogBranch = DialogActor->Dialog[index].BranchDialog[i];
+		if (!Choice) continue;
+		
+		
+		UChoicesWidget* ChoiceWidget = CreateWidget<UChoicesWidget>(this, ChoiceWidgetClass);
+		if (!ChoiceWidget) continue;
+		
+		ChoiceWidget->SetupChoice(Choice);
+		ChoiceWidget->SetChoiceText(Choice->ChoiceText);
 
-		for (int32 j = 0; j < DialogBranch.ChoiceText.Num(); j++)
+		// 버튼 클릭 바인딩 
+		ChoiceWidget->ChoiceButton->OnClicked.AddDynamic(this, &UDialogWidget::OnChoiceClicked);
+		ChoiceMap.Add(ChoiceWidget, Choice);
+		// UI에 추가
+		ChoiceContainer->AddChild(ChoiceWidget);
+	}
+	if (!Node) return;
+	DialogText->SetText(Node->Text);
+	if (!Name) return;
+	Name->SetText(Node->Name);
+	if (CharacterImage)
+	{
+		FSlateBrush ImageBrush;
+		ImageBrush.SetResourceObject(Node->Image);
+		CharacterImage->SetBrush(ImageBrush);
+	}
+
+}
+
+void UDialogWidget::CreateChoiceButton(UDialogChoiceAsset* Choice)
+{
+	UChoicesWidget* Widget = CreateWidget<UChoicesWidget>(this, ChoiceWidgetClass);
+	if (!Widget) return;
+
+
+
+	Widget->SetChoiceText(Choice->ChoiceText);
+	Widget->ChoiceButton->OnClicked.AddDynamic(this, &UDialogWidget::OnChoiceClicked);
+
+	ChoiceMap.Add(Widget, Choice);
+	ChoiceContainer->AddChild(Widget);
+}
+
+void UDialogWidget::OnChoiceClicked()
+{
+	for (UWidget* Child : ChoiceContainer->GetAllChildren())
+	{
+		UChoicesWidget* ChoiceWidget = Cast<UChoicesWidget>(Child);
+		if (!ChoiceWidget) continue;
+
+		// 버튼이 현재 눌림 상태인지 확인
+		if (ChoiceWidget->ChoiceButton->HasKeyboardFocus()) // 또는 다른 상태 체크
 		{
-			CreateButton(DialogBranch.ChoiceText[j]);
+			UDialogChoiceAsset* Chosen = ChoiceWidget->ChoiceData;
+			
+			if (Chosen && Chosen->NextNode)
+			{
+				ShowNode(Chosen->NextNode);
+				
+			}
+			break;
 		}
 	}
 }
+

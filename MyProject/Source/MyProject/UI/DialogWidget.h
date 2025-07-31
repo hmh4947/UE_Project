@@ -9,11 +9,15 @@
 /**
  * 
  */
+
 class UTextBlock;
 class UImage;
 class UButton;
 class ADialog;
 class UVerticalBox;
+class UDialogNodeAsset;
+class UDialogChoiceAsset;
+class UChoicesWidget;
 UCLASS()
 class MYPROJECT_API UDialogWidget : public UUserWidget
 {
@@ -36,36 +40,29 @@ public:
 	UImage* Background;
 
 
+
+
+	
 	UPROPERTY(meta = (BindWidget))
-	UVerticalBox* ChoiceVerticalBox;
+	UVerticalBox* ChoiceContainer;
 
-	UPROPERTY(meta=(BindWidget))
-	UButton* NextButton;
+	UPROPERTY(EditAnywhere, Category = "Dialog")
+	UDialogNodeAsset* RootNode;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialog")
-	TSubclassOf<ADialog> DialogClass;
+	UPROPERTY(EditAnywhere, Category = "Dialog")
+	TSubclassOf<UChoicesWidget> ChoiceWidgetClass;
 
-	ADialog* DialogActor;
+	//선택지 버튼과 데이터 map
+	UPROPERTY(EditAnywhere, Category = "Dialog")
+	TMap<UChoicesWidget*, UDialogChoiceAsset*> ChoiceMap;
 
-	void EndDialog();
+	UFUNCTION()
+	void ShowNode(UDialogNodeAsset* Node);
+	UFUNCTION()
+	void CreateChoiceButton(UDialogChoiceAsset* Choice);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TextArrayIndex;
 
-private:
-	UFUNCTION(BlueprintCallable)
-	void NextButtonCallback();
-	UFUNCTION(BlueprintCallable)
-	void CharacterNameCallback();
-	void SetText();
-	
-	void CreateButton(FText Text);
-	void CreateBranchButton(int32 index);
-	/*
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialog")
-	TSubclassOf<ADialog> DialogClassArray;
+	UFUNCTION()
+	void OnChoiceClicked();
 
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialog")
-	TObjectPtr<ADialog> DialogObjArray;*/
 };

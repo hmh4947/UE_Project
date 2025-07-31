@@ -12,6 +12,7 @@
 /**
  * 
  */
+
 DECLARE_DELEGATE_TwoParams(FOnSkillMontageEnd, UAnimMontage*, bool);
 UENUM()
 enum class ESkillType: uint8
@@ -21,7 +22,7 @@ enum class ESkillType: uint8
 
 
 };
-
+class UBTTask_EnemySwingAttack;
 
 UCLASS()
 
@@ -49,6 +50,8 @@ private:
 	bool is_hit;
 	bool is_RLactive;
 	int32 hit_count;
+
+	UPROPERTY()
 	TWeakObjectPtr<UBTTask_EnemySwingAttack> CallbackTask;
 	
 	FTimerHandle EnemySkillTimerHandler;
