@@ -7,6 +7,20 @@
 #include "Components/TextBlock.h"
 #include "ChoicesWidget.h"
 
+void UChoicesWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	if (ChoiceButton)
+	{
+		ChoiceButton->OnClicked.AddDynamic(this, &UChoicesWidget::HandleClicked);
+	}
+}
+
+void UChoicesWidget::HandleClicked()
+{
+	OnChoiceSelected.Broadcast(ChoiceData);
+}
+
 void UChoicesWidget::SetChoiceText(const FText& text)
 {
 	ChoiceText->SetText(text);
@@ -14,5 +28,5 @@ void UChoicesWidget::SetChoiceText(const FText& text)
 
 void UChoicesWidget::SetupChoice(UDialogChoiceAsset* InChoice)
 {
-	;
+	
 }

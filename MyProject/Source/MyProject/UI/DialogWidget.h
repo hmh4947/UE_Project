@@ -39,7 +39,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UImage* Background;
 
-
+	UPROPERTY(meta = (BindWidget))
+	UButton* NextButton;
 
 
 	
@@ -58,11 +59,14 @@ public:
 
 	UFUNCTION()
 	void ShowNode(UDialogNodeAsset* Node);
-	UFUNCTION()
-	void CreateChoiceButton(UDialogChoiceAsset* Choice);
-
+	
 
 	UFUNCTION()
-	void OnChoiceClicked();
+	void OnNextClicked();
+	UFUNCTION()
+	void OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton);
+private:
+	UPROPERTY()
+	UDialogNodeAsset* TempNextNode;
 
 };

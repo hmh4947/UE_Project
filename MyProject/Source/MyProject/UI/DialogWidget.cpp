@@ -21,10 +21,12 @@ void UDialogWidget::NativeConstruct()
 {
 	
 	Super::NativeConstruct();
-
+	
 	ShowNode(RootNode);
 	
 }
+
+
 
 void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 {
@@ -41,12 +43,15 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 		ChoiceWidget->SetupChoice(Choice);
 		ChoiceWidget->SetChoiceText(Choice->ChoiceText);
 
-		// 버튼 클릭 바인딩 
-		ChoiceWidget->ChoiceButton->OnClicked.AddDynamic(this, &UDialogWidget::OnChoiceClicked);
+		// 선택지 버튼 바인딩 
+		ChoiceWidget->ChoiceData = Choice;
+		ChoiceWidget->OnChoiceSelected.AddDynamic(this, &UDialogWidget::OnChoiceSelectedFun);
 		ChoiceMap.Add(ChoiceWidget, Choice);
 		// UI에 추가
 		ChoiceContainer->AddChild(ChoiceWidget);
+		NextButton->SetVisibility(ESlateVisibility::Hidden);
 	}
+	ChoiceContainer->SetVisibility(ESlateVisibility::Visible);
 	if (!Node) return;
 	DialogText->SetText(Node->Text);
 	if (!Name) return;
@@ -60,39 +65,46 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 
 }
 
-void UDialogWidget::CreateChoiceButton(UDialogChoiceAsset* Choice)
+
+
+
+void UDialogWidget::OnNextClicked()
 {
-	UChoicesWidget* Widget = CreateWidget<UChoicesWidget>(this, ChoiceWidgetClass);
-	if (!Widget) return;
+	if (TempNextNode)
+	{
+		ShowNode(TempNextNode);
 
-
-
-	Widget->SetChoiceText(Choice->ChoiceText);
-	Widget->ChoiceButton->OnClicked.AddDynamic(this, &UDialogWidget::OnChoiceClicked);
-
-	ChoiceMap.Add(Widget, Choice);
-	ChoiceContainer->AddChild(Widget);
+		// 버튼 숨기기
+		NextButton->SetVisibility(ESlateVisibility::Hidden);
+		TempNextNode = nullptr;
+		
+	}
+	else
+	{
+		//다음 노드가 없으면 위젯 안보이도록
+		SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
-void UDialogWidget::OnChoiceClicked()
+void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 {
-	for (UWidget* Child : ChoiceContainer->GetAllChildren())
+	if (ChosenButton)
 	{
-		UChoicesWidget* ChoiceWidget = Cast<UChoicesWidget>(Child);
-		if (!ChoiceWidget) continue;
-
-		// 버튼이 현재 눌림 상태인지 확인
-		if (ChoiceWidget->ChoiceButton->HasKeyboardFocus()) // 또는 다른 상태 체크
+		// 선택 후 대사 출력
+		if (!ChosenButton->ChosenText.IsEmpty())
 		{
-			UDialogChoiceAsset* Chosen = ChoiceWidget->ChoiceData;
-			
-			if (Chosen && Chosen->NextNode)
-			{
-				ShowNode(Chosen->NextNode);
-				
-			}
-			break;
+			DialogText->SetText(ChosenButton->ChosenText);
+			ChoiceContainer->SetVisibility(ESlateVisibility::Hidden);
 		}
+		//chosen을 출력 후 다음 노드 실행을 위한 임시 저장
+		TempNextNode = ChosenButton->NextNode;
+		if (NextButton)
+		{
+			NextButton->SetVisibility(ESlateVisibility::Visible);
+			NextButton->OnClicked.Clear();  
+			NextButton->OnClicked.AddDynamic(this, &UDialogWidget::OnNextClicked);
+		}
+	
 	}
 }
 
