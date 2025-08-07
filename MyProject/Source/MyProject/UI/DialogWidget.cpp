@@ -21,8 +21,9 @@ void UDialogWidget::NativeConstruct()
 {
 	
 	Super::NativeConstruct();
-	
+
 	ShowNode(RootNode);
+	
 	
 }
 
@@ -35,11 +36,11 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 	for (UDialogChoiceAsset* Choice : Node->Choices)
 	{
 		if (!Choice) continue;
-		
-		
+
+
 		UChoicesWidget* ChoiceWidget = CreateWidget<UChoicesWidget>(this, ChoiceWidgetClass);
 		if (!ChoiceWidget) continue;
-		
+
 		ChoiceWidget->SetupChoice(Choice);
 		ChoiceWidget->SetChoiceText(Choice->ChoiceText);
 
@@ -51,7 +52,9 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 		ChoiceContainer->AddChild(ChoiceWidget);
 		NextButton->SetVisibility(ESlateVisibility::Hidden);
 	}
-	ChoiceContainer->SetVisibility(ESlateVisibility::Visible);
+	ChoiceContainer->SetVisibility(ESlateVisibility::Visible);;
+		
+
 	if (!Node) return;
 	DialogText->SetText(Node->Text);
 	if (!Name) return;
@@ -62,8 +65,14 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 		ImageBrush.SetResourceObject(Node->Image);
 		CharacterImage->SetBrush(ImageBrush);
 	}
+	
+	TempNextNode = Node->NextNode;
+	NextButton->OnClicked.Clear();
+	NextButton->OnClicked.AddDynamic(this, &UDialogWidget::OnNextClicked);
 
 }
+
+
 
 
 
@@ -72,18 +81,21 @@ void UDialogWidget::OnNextClicked()
 {
 	if (TempNextNode)
 	{
+		if (ChoiceMap.IsEmpty())
+		{
+			ShowNode(TempNextNode);
+			TempNextNode = nullptr;
+			return;
+		}
 		ShowNode(TempNextNode);
-
-		// 버튼 숨기기
-		NextButton->SetVisibility(ESlateVisibility::Hidden);
-		TempNextNode = nullptr;
-		
 	}
 	else
 	{
+		
 		//다음 노드가 없으면 위젯 안보이도록
 		SetVisibility(ESlateVisibility::Collapsed);
 	}
+	
 }
 
 void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
@@ -106,5 +118,15 @@ void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 		}
 	
 	}
+}
+
+void UDialogWidget::Init()
+{
+	
+	TempNextNode = nullptr;
+
+	ChoiceMap.Empty();
+	ChoiceContainer->ClearChildren();
+	ShowNode(RootNode);
 }
 

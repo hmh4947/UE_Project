@@ -22,4 +22,6 @@ public:
 	virtual void BeginPlay()override;
 	virtual void HitCheck_Implementation() override;
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
+
+	
 };

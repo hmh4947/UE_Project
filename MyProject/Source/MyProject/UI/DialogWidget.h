@@ -47,7 +47,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* ChoiceContainer;
 
-	UPROPERTY(EditAnywhere, Category = "Dialog")
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "Dialog")
 	UDialogNodeAsset* RootNode;
 
 	UPROPERTY(EditAnywhere, Category = "Dialog")
@@ -60,6 +60,8 @@ public:
 	UFUNCTION()
 	void ShowNode(UDialogNodeAsset* Node);
 	
+	UFUNCTION(BlueprintCallable)
+	void Init();
 
 	UFUNCTION()
 	void OnNextClicked();

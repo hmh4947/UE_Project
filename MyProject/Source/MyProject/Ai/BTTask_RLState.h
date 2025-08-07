@@ -31,5 +31,5 @@ public:
 private:
 	TArray<float> TotalRewardArray;
 	void UpdateReward(float reward);
-	void SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB);
+	void SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB, APawn* pawn);
 };

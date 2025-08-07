@@ -43,13 +43,15 @@ protected:
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
 
 	void ActiveSkill() override;
+
+	int32 hit_count;
 private:
 	UPROPERTY(EditAnywhere,Category="Skill")
 	ESkillType SkillType;
 
 	bool is_hit;
 	bool is_RLactive;
-	int32 hit_count;
+	
 
 	UPROPERTY()
 	TWeakObjectPtr<UBTTask_EnemySwingAttack> CallbackTask;

@@ -190,7 +190,7 @@ void UBTTask_RLState::TestSendRLDecision(APawn* pawn, UBlackboardComponent* BB)
 	UE_LOG(LogTemp, Log, TEXT("RL Server to actionindex: %d"), ActionIndex);
 
 
-	SetReceivedSkillIndex(ActionIndex,BB);
+	SetReceivedSkillIndex(ActionIndex,BB,pawn);
 }
 
 int32 UBTTask_RLState::GetReceivedSkillIndex() const
@@ -203,12 +203,24 @@ void UBTTask_RLState::UpdateReward(float reward)
 	TotalReward += reward;
 }
 
-void UBTTask_RLState::SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB)
+void UBTTask_RLState::SetReceivedSkillIndex(int32 index, UBlackboardComponent* BB, APawn* pawn)
 {
 	
+
 	if (!BB) return;
 	BB->SetValueAsInt("MontageIndex", index);
+	
 	UE_LOG(LogTemp, Warning, TEXT("skill_Index: %d"), index);
+	if(pawn)
+	{
+		ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(pawn);
+		if (Enemy) {
+			ASkills* skill = Enemy->SkillComponent->GetActivatableSkill(index);
+			Enemy->SkillComponent->setCurrentSkill(skill);
+		}
+	}
+
+	
 }
 
 
