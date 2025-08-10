@@ -6,9 +6,9 @@
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyProject/ClickMovePlayerController.h"
-
-
-
+#include "MyProject/EnemyHealthComponent.h"
+#include "MyProject/SevargoEnemy.h"
+#include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 // Sets default values
 ASkills::ASkills()

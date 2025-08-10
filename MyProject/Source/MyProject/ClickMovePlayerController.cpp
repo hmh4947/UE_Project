@@ -14,8 +14,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-
-
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 
 
@@ -38,6 +38,19 @@ AClickMovePlayerController::AClickMovePlayerController()
 }
 
 
+
+void AClickMovePlayerController::BlockWorldClick(UUserWidget* TargetWidget)
+{
+	if (!TargetWidget) return;
+
+	SetPause(true);
+}
+
+void AClickMovePlayerController::UnBlockWorldClick()
+{
+
+	SetPause(false);
+}
 
 void AClickMovePlayerController::BeginPlay()
 {
@@ -243,7 +256,7 @@ void AClickMovePlayerController::HitDash()
 			Dash();
 			//ÄðÅ¸ÀÓ
 			GetWorldTimerManager().SetTimer(Timer, this, &AClickMovePlayerController::coolTimer, 2.f, true, 0.f);
-			DrawDebugLine(GetWorld(), StartL, EndL, FColor::Purple, false, 5.0f, 0, 1.0f);
+		//	DrawDebugLine(GetWorld(), StartL, EndL, FColor::Purple, false, 5.0f, 0, 1.0f);
 
 			
 		}

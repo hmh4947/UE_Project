@@ -3,6 +3,9 @@
 
 #include "MyProject/UI/DialogWidget.h"
 #include "MyProject/UI/Dialog.h"
+#include "MyProject/ClickMovePlayerController.h"
+#include "Kismet/GameplayStatics.h"
+
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
@@ -67,7 +70,9 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 	}
 	
 	TempNextNode = Node->NextNode;
+	
 	NextButton->OnClicked.Clear();
+
 	NextButton->OnClicked.AddDynamic(this, &UDialogWidget::OnNextClicked);
 
 }
@@ -81,19 +86,19 @@ void UDialogWidget::OnNextClicked()
 {
 	if (TempNextNode)
 	{
-		if (ChoiceMap.IsEmpty())
-		{
-			ShowNode(TempNextNode);
-			TempNextNode = nullptr;
-			return;
-		}
 		ShowNode(TempNextNode);
+		return;
 	}
 	else
 	{
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		AClickMovePlayerController* Controller = Cast<AClickMovePlayerController>(PC);
+		
 		
 		//다음 노드가 없으면 위젯 안보이도록
 		SetVisibility(ESlateVisibility::Collapsed);
+		Controller->UnBlockWorldClick();
+		
 	}
 	
 }
@@ -119,6 +124,8 @@ void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 	
 	}
 }
+
+
 
 void UDialogWidget::Init()
 {

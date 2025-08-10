@@ -15,7 +15,7 @@
  * 
  */
 class UNiagaraSystem;
-
+class UUserWidget;
 UCLASS()
 class MYPROJECT_API AClickMovePlayerController : public APlayerController
 {
@@ -66,7 +66,7 @@ public:
 	void HitDash();
 	void Dash();
 	void StopDash();
-	void TriggerDash();
+	
 
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = state)
@@ -109,6 +109,13 @@ public:
 	FVector characterSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = location)
 	FVector dash;
+
+	UFUNCTION(BlueprintCallable)
+	void BlockWorldClick(UUserWidget* TargetWidget);
+
+	UFUNCTION(BlueprintCallable)
+	void UnBlockWorldClick();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -138,6 +145,8 @@ private:
 
 	AWarriorCharacter* WarriorCharacterInstance;
 	 float FollowTime = 0.f;
+
+
 public:
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;

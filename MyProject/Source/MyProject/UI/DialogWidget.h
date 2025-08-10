@@ -59,7 +59,7 @@ public:
 
 	UFUNCTION()
 	void ShowNode(UDialogNodeAsset* Node);
-	
+
 	UFUNCTION(BlueprintCallable)
 	void Init();
 

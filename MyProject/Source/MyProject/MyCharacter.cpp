@@ -16,10 +16,10 @@
 AMyCharacter::AMyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//Begin함수 동작한 직후 Tick 함수가 계속 동작하도록 만듦
-	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 
@@ -88,7 +88,7 @@ void AMyCharacter::Tick(float DeltaSeconds)
 
 	if (GetWorld()->TimeSince(InteractionData.LastInteractionCheckTime) > InteractionCheckFrequency)
 	{
-		PeformInteractionCheck();
+	//	PeformInteractionCheck();
 	}
 }
 
