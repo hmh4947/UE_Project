@@ -6,6 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
+#include "MyProject/Skill/EnemyAOEEffect.h"
 
 void AEnemyAOESkill::BeginPlay()
 {
@@ -26,33 +27,6 @@ void AEnemyAOESkill::damageArea(float radius, float damageAmount, FVector startP
 
 }
 
-void AEnemyAOESkill::OnDamage(USphereComponent* sphereComponent)
-{
-	TArray<AActor*> OverlappedActors;
-	sphereComponent->GetOverlappingActors(OverlappedActors, AWarriorCharacter::StaticClass());
-	for (AActor* OverlappedActor : OverlappedActors)
-	{
-		AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(OverlappedActor);
-		if (Warrior)
-		{
-
-			UHealthComponent* HealthComponent = Warrior->FindComponentByClass<UHealthComponent>();
-			if (HealthComponent != nullptr)
-			{
-
-
-				HealthComponent->LoseHealth(this->damage);
-				isDamage = true;
-				
-				
-			}
-		}
-	}
-	if (isDamage)
-	{
-		this->hit_count += 1;
-	}
-}
 
 void AEnemyAOESkill::InitObjects()
 {
@@ -61,17 +35,16 @@ void AEnemyAOESkill::InitObjects()
 	for (int i = 0; i < instanceArraySize; i++)
 	{
 		
-	
-		AActor* DamageAOE = GetWorld()->SpawnActor<AActor>(Instance);
+		AEnemyAOEEffect* DamageAOE = GetWorld()->SpawnActor<AEnemyAOEEffect>(Instance);
 	
 		DamageAOE->SetActorEnableCollision(false);
 		DamageAOE->SetActorHiddenInGame(true);
-
+		DamageAOE->setDamage(damage);
 		UNiagaraComponent* NiagaraComp = DamageAOE->FindComponentByClass<UNiagaraComponent>();
 		if (!NiagaraComp) return;
 		// 생성 직후엔 재생 안 되도록
 		NiagaraComp->SetAutoActivate(false);
-
+		NiagaraComp->SetAutoDestroy(false);
 		USphereComponent* SphereComponent = DamageAOE->FindComponentByClass<USphereComponent>();
 		if (!SphereComponent) return;
 		SphereComponent->SetActive(false);
@@ -96,16 +69,23 @@ void AEnemyAOESkill::ReuseObjects()
 		
 
 		UNiagaraComponent* NiagaraComp = Obj->FindComponentByClass<UNiagaraComponent>();
-		if (!NiagaraComp) return;
+		if (!NiagaraComp) continue;
 		USphereComponent* SphereComponent = Obj->FindComponentByClass<USphereComponent>();
-		if (!SphereComponent) return;
-		OnDamage(SphereComponent);
+		if (!SphereComponent)  continue;
 
-		NiagaraComp->ResetSystem();
+		
+
+		AEnemyAOEEffect* SkillEffect = Cast<AEnemyAOEEffect>(Obj);
+		if(!SkillEffect) continue;
+		//바인딩(나이아가라 끝나는 타이밍)
+		SkillEffect->EffectFinished.AddDynamic(this, &AEnemyAOESkill::OnEffectEnd);
+		
+		Obj->SetActorHiddenInGame(false);	
+		NiagaraComp->SetHiddenInGame(false);
+		NiagaraComp->DeactivateImmediate();  // 이전 상태 초기화
 		NiagaraComp->Activate(true);
-
 		Obj->SetActorEnableCollision(true);
-		Obj->SetActorHiddenInGame(false); 
+		
 	}
 
 }
@@ -120,3 +100,28 @@ void AEnemyAOESkill::ResetObjects()
 		
 	}
 }
+
+void AEnemyAOESkill::OnEffectEnd(AEnemyAOEEffect* FinishedEffect)
+{
+	for (AActor* Obj : Instances)
+	{
+		if (!Obj) continue;
+		USphereComponent* SphereComponent = Obj->FindComponentByClass<USphereComponent>();
+		if (!SphereComponent)  continue;
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	
+		FTimerHandle TimerHandle;
+		FinishedEffect->GetWorldTimerManager().SetTimer(
+			TimerHandle,
+			[SphereComponent]()
+			{
+				SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			},
+			0.1f,   // 충돌 유지 시간
+			false
+		);
+	}
+}
+
+

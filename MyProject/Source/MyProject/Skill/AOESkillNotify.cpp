@@ -5,6 +5,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyProject/SevargoEnemy.h"
 #include "MyProject/Skill/SkillComponent.h"
+#include "MyProject/Interface/SkillHitCheckInterface.h"
 void UAOESkillNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);

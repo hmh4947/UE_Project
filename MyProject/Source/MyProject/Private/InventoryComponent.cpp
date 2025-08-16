@@ -2,6 +2,7 @@
 
 
 #include "InventoryComponent.h"
+#include "MyProject/ItemBase.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()

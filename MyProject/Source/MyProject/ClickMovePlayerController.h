@@ -154,4 +154,6 @@ public:
 	//아이템 배열
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FString> item;
+
+
 };

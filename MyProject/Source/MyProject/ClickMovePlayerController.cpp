@@ -142,12 +142,12 @@ void AClickMovePlayerController::SetNewDestination(const FVector Destination)
 		APawn* const MyPawn = GetPawn();
 		if (MyPawn) {
 			float const Distance = FVector::Dist(Destination, MyPawn->GetActorLocation());
-			if (Distance > 120.0f) {
+			if (Distance >100.0f) {
 
 			
 
-					//함수 호출을 통해 목적지로 폰을 이동시킴(모듈추가)
-					UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Destination);
+				//함수 호출을 통해 목적지로 폰을 이동시킴(모듈추가)
+				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Destination);
 				
 			}
 			
@@ -370,6 +370,8 @@ void AClickMovePlayerController::coolTimer()
 
 	
 }
+
+
 
 
 
