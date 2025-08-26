@@ -38,12 +38,12 @@ class AttackEnv(gym.Env):
     # 보상 설계 예시: 스킬 적절성 평가
 
         if not skill_active:    #스킬 쿨타임 중
-            reward -= 1.0
+            reward -= 0.5
         elif action == skill_type:  #스킬을 맞게 선택
             if skill_type == 0:   #0:근거리 1:원거리
-                reward += 0.7
+                reward += 0.0
             else:
-                reward += 0.5
+                reward += 0.0
 
 
             if is_hit:       #히트에 성공했다면

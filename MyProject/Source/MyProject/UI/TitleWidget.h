@@ -31,7 +31,7 @@ public:
 	UTextBlock* Option;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Exit;
+	UTextBlock* Quit;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* StartButton;
@@ -40,9 +40,17 @@ public:
 	UButton* OptionButton;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* ExitButton;
+	UButton* QuitButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* VerticalBox;
 
+	UPROPERTY(EditAnywhere, Category="Level")
+	FName StartLevel;
+
+	UFUNCTION()
+	void OnClickStart();
+
+	UFUNCTION()
+	void OnClickQuit();
 };

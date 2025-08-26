@@ -17,5 +17,19 @@ class MYPROJECT_API AEnemyUltimateSwingSkill : public ATrainSkills, public ISkil
 
 public:
 	virtual void BeginPlay() override;
-	
+	virtual void HitCheck_Implementation() override;
+	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
+
+	UPROPERTY(VisibleAnywhere)
+	AActor* Instances;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> Instance;
+
+	UFUNCTION()
+	void OnEffectEnd(AUltimateSwingEffect* FinishedEffect);
+private:
+
+	void InitObjects();
+	void ReuseObjects();
+
 };

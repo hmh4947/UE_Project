@@ -29,7 +29,6 @@ public:
 	virtual void HitCheck_Implementation() override;
 	virtual void damageArea(float radius, float damageAmount, FVector startPos, FVector endPos) override;
 
-//	void OnDamage(USphereComponent* sphereComponent);
 	UFUNCTION()
 	void OnEffectEnd(AEnemyAOEEffect* FinishedEffect);
 
@@ -37,7 +36,7 @@ private:
 
 	void InitObjects();
 	void ReuseObjects();
-	void ResetObjects();
+
 
 	bool isDamage;
 };

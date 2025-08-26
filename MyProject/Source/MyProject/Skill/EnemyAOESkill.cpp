@@ -90,16 +90,7 @@ void AEnemyAOESkill::ReuseObjects()
 
 }
 
-void AEnemyAOESkill::ResetObjects()
-{
-	for(AActor* Obj:Instances)
-	{
-		if (!Obj) continue;
-		Obj->SetActorEnableCollision(false);
-		Obj->SetActorHiddenInGame(true);
-		
-	}
-}
+
 
 void AEnemyAOESkill::OnEffectEnd(AEnemyAOEEffect* FinishedEffect)
 {
