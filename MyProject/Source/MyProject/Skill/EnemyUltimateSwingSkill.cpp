@@ -91,6 +91,8 @@ void AEnemyUltimateSwingSkill::ReuseObjects()
 	NiagaraComp->Activate(true);
 	SphereComponent->Activate(true);
 	Instances->SetActorEnableCollision(true);
+
+
 	
 
 }
