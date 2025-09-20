@@ -31,6 +31,13 @@ void USkillComponent::BeginPlay()
 
 	}
 
+	Initialize();
+
+}
+
+
+void USkillComponent::Initialize()
+{
 	setCurrentSkill(ActivatableSkills[0]);
 
 
@@ -46,9 +53,7 @@ void USkillComponent::BeginPlay()
 
 	Blackboard->SetValueAsObject("SkillObj", ActivatableSkills[0]);
 	InitActivatableSkill.Broadcast();
-
 }
-
 
 // Called every frame
 void USkillComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

@@ -18,15 +18,16 @@ public:
 	UHealthComponent();
 
 	//소유자로부터 체력을 뺏음
-	virtual void LoseHealth(float Amount);
+	virtual void LoseHealth(float  amount);
 	
 	//소유자의 체력 세팅
-	virtual void SetHealth(float health);
+	virtual void SetHealth(float  amount);
+	virtual void SetMaxHealth(float  amount);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	float maxHealth;
 	
 public:	
 	// Called every frame
@@ -35,10 +36,11 @@ public:
 //	FORCEINLINE float GetHealthPercent() const { return Health / 100.f; }
 
 	UPROPERTY(EditDefaultsOnly, Category = Health)
-	float Health;
+	float health;
 
 	bool OnDeath=false;
 
 	
+private:
 
 };

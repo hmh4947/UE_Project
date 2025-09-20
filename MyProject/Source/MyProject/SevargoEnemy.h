@@ -9,13 +9,14 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "HealthComponent.h"
-#include "EnemyHealthComponent.h"
 #include "SevargoEnemyAnimInstance.h"
 #include "ABAIController.h"
 #include "EnemyStateEnum.h"
 #include "SevargoEnemy.generated.h"
 
 class USkillComponent;
+class UEnemyHealthComponent;
+class ACutSceneManager;
 UCLASS()
 
 class MYPROJECT_API ASevargoEnemy : public AEnemyCharacter, public IHealthInterface
@@ -29,15 +30,16 @@ public:
 
 	ASevargoEnemy();
 
+	virtual void Initialize() override;
 	virtual void OnDeath_Implementation() override;
 
 	virtual void OnTakeDamage_Implementation() override;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	class UHealthComponent* HealthComponent;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	class UEnemyHealthComponent* EnemyHealthComponent;
+	/*UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	UHealthComponent* HealthComponent;
+	*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UEnemyHealthComponent* EnemyHealthComponent;
 
 	virtual void PostInitializeComponents() override;
 
@@ -47,7 +49,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AActor* CurrentSkill;
 
-
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite,Category="Health")
+	float health;
 
 	UFUNCTION(BlueprintCallable, Category="EnemyCharacter")
 	void AttackStart();
@@ -67,6 +70,9 @@ public:
 
 	UPROPERTY(EditAnyWhere,BlueprintReadOnly)
 	USkillComponent* SkillComponent;
+
+	//ACutSceneManager* cutSceneManager;
+
 private:
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;

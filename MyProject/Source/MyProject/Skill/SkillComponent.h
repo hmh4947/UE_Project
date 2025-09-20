@@ -29,6 +29,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	void Initialize();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

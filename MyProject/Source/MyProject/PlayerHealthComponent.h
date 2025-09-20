@@ -17,14 +17,13 @@ class MYPROJECT_API UPlayerHealthComponent : public UHealthComponent
 public:
 	UPlayerHealthComponent();
 
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetHealth(float health) override;
+	void SetMaxHealth(float amount) override;
+	void SetHealth(float amount) override;
+	void LoseHealth(float amount) override;
 
-	void LoseHealth(float Amount) override;
-
-	UPROPERTY(BlueprintReadWrite, Category = Health)
-	float PlayerHealth = 100.f;
 
 	UPROPERTY(BlueprintReadWrite, Category = Health)
 	bool P_isDeath;
@@ -32,5 +31,6 @@ public:
 	UPROPERTY()
 	class UWarriorAnimInstance* ABAnim;
 
-	FORCEINLINE float GetHealthPercent() const { return PlayerHealth / 100.f; }
+
+	FORCEINLINE float GetHealthPercent() const { return this->health / this->maxHealth; }
 };

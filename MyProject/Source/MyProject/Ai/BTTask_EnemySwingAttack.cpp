@@ -25,6 +25,11 @@ UBTTask_EnemySwingAttack::UBTTask_EnemySwingAttack()
 }
 
 
+void UBTTask_EnemySwingAttack::Initialize()
+{
+	IsAttacking = false;
+}
+
 EBTNodeResult::Type UBTTask_EnemySwingAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 
@@ -50,6 +55,7 @@ EBTNodeResult::Type UBTTask_EnemySwingAttack::ExecuteTask(UBehaviorTreeComponent
 
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController) return EBTNodeResult::Failed;
+	
 	APawn* Pawn = AIController->GetPawn();
 	if (!Pawn) return EBTNodeResult::Failed;
 

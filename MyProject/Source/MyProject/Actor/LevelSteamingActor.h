@@ -7,6 +7,11 @@
 #include "LevelSteamingActor.generated.h"
 class UBoxComponent;
 class UUserWidget;
+class UMediaSoundComponent;
+class UMediaPlayer;
+class UMediaSource;
+class UHUDWidget;
+class ACharacter;
 UCLASS()
 
 class MYPROJECT_API ALevelSteamingActor : public AActor
@@ -23,6 +28,8 @@ protected:
 
 public:	
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBoxComponent* BoxCollision;
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AActor> spawnEnemy;
 
@@ -33,7 +40,30 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere,Category = "Level")
 	FName level;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Media")
+	UMediaSoundComponent* MediaSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media")
+	UMediaPlayer* MediaPlayer;  
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Media")
+	UMediaSource* MyMediaSource;
+
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<UHUDWidget> HUDWidget;
+
+
+	UFUNCTION()
+	virtual void ClosedWidget();
+
+	void SetVisibleEnemyHealthBar();
+	UPROPERTY(VisibleAnywhere)
+	UUserWidget* LevelStreamingWidget;
+
+	ACharacter* playerCharacter;
 };

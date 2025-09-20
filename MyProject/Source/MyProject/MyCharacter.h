@@ -43,7 +43,7 @@ public:
 	UPROPERTY(EditAnyWhere, Category = Input)
 	class UInputAction* IA_Interaction;
 
-	
+	virtual void Initialize();
 protected:
 	UPROPERTY()
 	AMyProjectHUD* HUD;

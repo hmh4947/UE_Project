@@ -6,6 +6,9 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Actor.h"
 #include "Skill/SkillComponent.h"
+#include "MyProject/EnemyHealthComponent.h"
+#include "MyProject/MyProjectGameModeBase.h"
+#include "MyProject/Actor/CutSceneManager.h"
 
 
 
@@ -18,12 +21,17 @@ ASevargoEnemy::ASevargoEnemy()
 	//AI 빙의 시기
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
+
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	SphereComponent->SetSphereRadius(130.f);
 	SphereComponent->SetupAttachment(GetCapsuleComponent());
 	EnemyHealthComponent = CreateDefaultSubobject<UEnemyHealthComponent>(TEXT("EnemyHealthComponent"));
+
+
+
 	SkillComponent = CreateDefaultSubobject<USkillComponent>(TEXT("SkillComponent"));
 	
+
 	OnDeath = false;
 }
 
@@ -31,7 +39,21 @@ ASevargoEnemy::ASevargoEnemy()
 void ASevargoEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	this->Weapon = GetMesh()->GetBodyInstance("Weapon_01");
+	AMyProjectGameModeBase* GM = Cast<AMyProjectGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	GM->SetEnemy(this);
+	EnemyHealthComponent->SetMaxHealth(health);
+}
+
+void ASevargoEnemy::Initialize()
+{
+	Super::Initialize();
+	OnDeath = false;
+	EnemyHealthComponent->SetHealth(health);
+	//위젯 healthbar갱신
+	EnemyHealthComponent->LoseHealth(0);
+	SkillComponent->Initialize();
 
 }
 
@@ -47,28 +69,17 @@ void ASevargoEnemy::OnDeath_Implementation()
 
 
 		ABAnim->OnDeath();
+		ACutSceneManager* cutSceneManager = Cast<ACutSceneManager>(
+			UGameplayStatics::GetActorOfClass(GetWorld(), ACutSceneManager::StaticClass()));
 
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("null AnimInstance "));
-	}
-
-	/*
-	
-			//몬스터 상태 변경
-		EnemyStateEnum = EnemyState::Dead;
-		OnDeath = true;
-	
-		//AI 컨트롤러 빙의 해제
-		AutoPossessAI = EAutoPossessAI::Disabled;
-		if(Controller)
-		{
-			Controller->OnUnPossess();
-		}
+		if (!cutSceneManager) return;
+		cutSceneManager->PlayCutScene(ECutSceneType::BossEvent);
+	//	Controller->UnPossess();
 		
-		ABAnim->OnDeath();
-	*/
+	}
+	
+
+
 }
 
 void ASevargoEnemy::OnTakeDamage_Implementation()

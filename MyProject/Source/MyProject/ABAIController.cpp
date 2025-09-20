@@ -7,8 +7,11 @@
 #include "HUDWidget.h"
 #include "ClickMovePlayerController.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BTTaskNode.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "MyProject/Ai/MyTaskNode.h"
 
 #include "SevargoEnemy.h"
 #include "Sockets.h"
@@ -46,6 +49,9 @@ AABAIController::AABAIController()
 	}
 	
 }
+
+
+
 
 void AABAIController::UpdateEnemyHealthPercent(float HealthPercent)
 {
@@ -91,15 +97,18 @@ void AABAIController::Tick(float DeltaTime)
 
 }
 
+void AABAIController::RegisterTaskNode(UMyTaskNode* node)
+{
+	ManagedTasks.Add(node);
+}
+
 
 
 void AABAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
 
-	
 }
 
 FString AABAIController::SendStateToExternal()

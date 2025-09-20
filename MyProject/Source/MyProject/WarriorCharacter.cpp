@@ -17,6 +17,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "EnemyHealthComponent.h"
 #include "Skill/SkillComponent.h"
+#include "MyProject/MyProjectGameModeBase.h"
 
 
 
@@ -26,16 +27,27 @@ AWarriorCharacter::AWarriorCharacter()
 {
 	MaxCombo = 2;
 	AttackEndComboState();
-//	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+
 	PlayerHealthComponent = CreateDefaultSubobject<UPlayerHealthComponent>(TEXT("PlayerHealthComponent"));
 	skillComponent = CreateDefaultSubobject<USkillComponent>(TEXT("SkillComponent"));
+
+}
+
+void AWarriorCharacter::Initialize()
+{
+	Super::Initialize();
+	isDeath = false;
+	PlayerHealthComponent->SetHealth(health);
+	//위젯 healthbar갱신
+	PlayerHealthComponent->LoseHealth(0);
+	skillComponent->Initialize();
 }
 
 void AWarriorCharacter::OnDeath_Implementation()
 {
-	if (GetOwner()->Implements<UHealthInterface>()) {
-		IHealthInterface::Execute_OnDeath(GetOwner());
-	}
+	isDeath = true;
+	OnCharacterDied.Broadcast();
+	UE_LOG(LogTemp, Warning, TEXT("player death"));
 }
 
 
@@ -58,7 +70,7 @@ void AWarriorCharacter::losehealth()
 	{
 		ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(HitTrace.GetActor());
 		if (Enemy != nullptr)
-		{
+		{	
 
 			
 			UEnemyHealthComponent* EnemyHealthComponent = Enemy->FindComponentByClass<UEnemyHealthComponent>();
@@ -120,11 +132,7 @@ void AWarriorCharacter::MeleeTraceGetHitActor()
 
 
 		}
-		/*배열의 모든 요소 출력
-		for (FHitResult& HitResult : HitResults) {
-			UE_LOG(LogTemp, Warning, TEXT("Hit Actors: %s"), *HitTrace.GetActor()->GetName());
-		}
-		*/
+	
 		// 각 지점에서 레이 트레이스 수행
 		for (int i = 0; i < MeleeTrace.Num() - 1; ++i)
 		{
@@ -229,9 +237,12 @@ void AWarriorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void AWarriorCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	AMyProjectGameModeBase* GM = Cast<AMyProjectGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	GM->SetPlayer(this);
 	FName WeaponSocket(TEXT("SwordSocket"));
+	PlayerHealthComponent->SetMaxHealth(health);
 	auto Weapon = GetWorld()->SpawnActor<ASword>(FVector::ZeroVector, FRotator::ZeroRotator);
-	
+	isDeath = false;
 	if (nullptr != Weapon)
 	{
 		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
@@ -254,7 +265,7 @@ void AWarriorCharacter::BeginPlay()
 void AWarriorCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	// 캐릭터의 현재 위치를 가져옴
 	CharacterLocation = GetActorLocation();
 	// 캐릭터의 이동 속도
@@ -333,7 +344,7 @@ void AWarriorCharacter::Turn()
 
 void AWarriorCharacter::Attack()
 {
-	
+	if (isDeath)return;
 	CanNextCombo = true;
 	
 	//1타 공격시
@@ -367,6 +378,7 @@ void AWarriorCharacter::setCurrentSkill(AActor* skill)
 }
 void AWarriorCharacter::Attack_Q()
 {
+	if (isDeath)return;
 	if (IsAttacking) return;
 	
 	skillComponent->Skill(this, ESkillInput::ESI_InputQ);
@@ -376,6 +388,7 @@ void AWarriorCharacter::Attack_Q()
 
 void AWarriorCharacter::Attack_W()
 {
+	if (isDeath)return;
 	if (IsAttacking) return;
 
 	skillComponent->Skill(this, ESkillInput::ESI_InputW);
@@ -384,6 +397,7 @@ void AWarriorCharacter::Attack_W()
 
 void AWarriorCharacter::Attack_E()
 {
+	if (isDeath)return;
 	if (IsAttacking) return;
 	skillComponent->Skill(this, ESkillInput::ESI_InputE);
 	setCurrentSkill(skillComponent->getCurrentSkill());
@@ -391,6 +405,7 @@ void AWarriorCharacter::Attack_E()
 
 void AWarriorCharacter::Attack_R()
 {
+	if (isDeath)return;
 	if (IsAttacking) return;
 	skillComponent->Skill(this, ESkillInput::ESI_InputR);
 	setCurrentSkill(skillComponent->getCurrentSkill());

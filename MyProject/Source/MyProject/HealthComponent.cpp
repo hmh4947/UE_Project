@@ -15,24 +15,18 @@ UHealthComponent::UHealthComponent()
 	// ...
 }
 
-void UHealthComponent::LoseHealth(float Amount)
+void UHealthComponent::LoseHealth(float  amount)
 {
-	/*
-
-	Health -= Amount;
 	
-	if (GetOwner()->Implements<UHealthInterface>()) {
-		//인터페이스 안에서 호출해야 하는 함수는 항상 Execute_접두사가 붙는 이름을 가짐
-		IHealthInterface::Execute_OnTakeDamage(GetOwner());
-		
-	
-	}
-	*/
 }
 
-void UHealthComponent::SetHealth(float health)
+void UHealthComponent::SetHealth(float  amount)
 {
-	//Health = health;
+	this->health = amount;
+}
+void UHealthComponent::SetMaxHealth(float  amount)
+{
+	this->maxHealth = amount;
 }
 
 
@@ -53,4 +47,5 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
+
 

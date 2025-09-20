@@ -17,7 +17,11 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDied);
+
+class UHUDWidget;
 class USkillComponent;
+
 UCLASS()
 class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInterface
 {
@@ -31,7 +35,7 @@ class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInter
 	void Turn();
 	
 
-
+	
 	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(EditAnywhere)
@@ -41,6 +45,11 @@ class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInter
 public:
 
 	AWarriorCharacter();
+
+	virtual void Initialize() override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCharacterDied OnCharacterDied;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputMappingContext* IMC_Warrior_Character;
@@ -66,7 +75,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AActor* CurrentSkill;
 
-	
+	UPROPERTY(EditAnywhere, Category =Health)
+	float health;
+
 	FVector StartL;
 	FVector EndL;
 	FVector Direction;
@@ -161,11 +172,11 @@ public:
 	bool bMeleeBlocked;
 	bool setAttacking(bool isAttacking);
 
-
-	UPROPERTY()
-	class UHUDWidget* HUDWidget;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	bool isDeath;
 protected:
 	//적에게 입힐 데미지
+	
 
 	UPROPERTY(EditAnywhere, Category = Damage)
 	float Damage = 100.f;

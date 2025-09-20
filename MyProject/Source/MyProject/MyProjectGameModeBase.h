@@ -9,9 +9,25 @@
 /**
  * 
  */
+class AMyCharacter;
+class AEnemyCharacter;
+class AActor;
 UCLASS()
 class MYPROJECT_API AMyProjectGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION()
+	void ResetEnvironment();
+
+	void SetPlayer(AMyCharacter* character);
+	void SetEnemy(AEnemyCharacter* enemyCharacter);
+
 	
+private:
+	AMyCharacter* player;
+	AEnemyCharacter* enemy;
+	
+
 };

@@ -6,6 +6,12 @@
 #include "MyProject/Skill/SkillComponent.h"
 
 
+void UHUDWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	EnemyHealthBar->SetVisibility(ESlateVisibility::Hidden);
+}
+
 void UHUDWidget::UpdateHealthPercent(float HealthPercent)
 {
 	HealthBar->SetPercent(HealthPercent);
@@ -14,6 +20,7 @@ void UHUDWidget::UpdateHealthPercent(float HealthPercent)
 void UHUDWidget::UpdateEnemyHealthPercent(float HealthPercent)
 {
 	EnemyHealthBar->SetPercent(HealthPercent);
+	
 	
 }
 
@@ -108,6 +115,11 @@ void UHUDWidget::UpdateRSkillPercent(float Percent, ASkills* Skill)
 		SkillCool_R->SetText(FText::AsNumber(round_percent));
 
 	}
+}
+
+void UHUDWidget::SetVisibleEnemyHealthBar()
+{
+	EnemyHealthBar->SetVisibility(ESlateVisibility::Visible);
 }
 
 

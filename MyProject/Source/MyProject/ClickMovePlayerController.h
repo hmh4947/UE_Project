@@ -16,6 +16,8 @@
  */
 class UNiagaraSystem;
 class UUserWidget;
+class UGameOverWidget;
+class UHUDWidget;
 UCLASS()
 class MYPROJECT_API AClickMovePlayerController : public APlayerController
 {
@@ -30,7 +32,7 @@ public:
 	
 	AClickMovePlayerController();
 
-
+	void Initialize();
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputMappingContext* DefaultMappingContext;
 
@@ -141,6 +143,8 @@ protected:
 	FTimerHandle Timer;
 
 	void coolTimer();
+	
+
 private:
 
 	AWarriorCharacter* WarriorCharacterInstance;
@@ -149,11 +153,18 @@ private:
 
 public:
 	UPROPERTY()
-	class UHUDWidget* HUDWidget;
+	UHUDWidget* HUDWidget;
+
+	UPROPERTY(EditAnywhere,Category="Widget")
+	TSubclassOf<UGameOverWidget> GameOverWidgetClass;
+
+	UGameOverWidget* GameOverWidget;
 
 	//아이템 배열
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FString> item;
 
-
+	UFUNCTION()
+	void CreateGameOverWidget();
+	
 };

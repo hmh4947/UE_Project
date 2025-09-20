@@ -10,6 +10,8 @@ void UWarriorAnimInstance::JumpToAttackMontageSection(int32 NewSection)
 
 }
 
+
+
 UWarriorAnimInstance::UWarriorAnimInstance()
 {
 
@@ -19,6 +21,7 @@ UWarriorAnimInstance::UWarriorAnimInstance()
 	{
 		AttackMontage = ATTACK_MONTAGE.Object;
 	}
+	
 }
 
 void UWarriorAnimInstance::PlayAttackMontage()

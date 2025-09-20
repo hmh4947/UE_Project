@@ -13,6 +13,11 @@ AEnemyCharacter::AEnemyCharacter()
 	//AutoPossessAI::EAutoPossessAI::PlacedInWorldOrSpawn;
 }
 
+void AEnemyCharacter::Initialize()
+{
+	
+}
+
 // Called when the game starts or when spawned
 void AEnemyCharacter::BeginPlay()
 {

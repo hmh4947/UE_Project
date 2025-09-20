@@ -12,7 +12,9 @@
  * 
  */
 class USkillComponent;
+class UBehaviorTreeComponent;
 class ASkill;
+class UMyTaskNode;
 UCLASS()
 class MYPROJECT_API AABAIController : public AAIController
 {
@@ -20,6 +22,8 @@ class MYPROJECT_API AABAIController : public AAIController
 	
 public:
 	AABAIController();
+
+	
 
 	//HUDWidget
 	UPROPERTY(EditDefaultsOnly)
@@ -37,6 +41,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	TArray<TSubclassOf<UMyTaskNode>> Tasks;
+
+	void RegisterTaskNode(UMyTaskNode* node);
 protected:
 	virtual void BeginPlay() override;
 
@@ -44,11 +52,18 @@ private:
 	//타이머 매니저에 콜백을 등록하기 위해 필요한 핸들
 	FTimerHandle TimerHandle;
 
+
+	UPROPERTY()
+	TArray<UMyTaskNode*> ManagedTasks;
+
 	UPROPERTY()
 	class UHUDWidget* HUDWidget;
 	
 	UPROPERTY(VisibleAnyWhere)
 	class UBehaviorTree* BehaviorTree;
+
+	UPROPERTY(VisibleAnyWhere)
+	UBehaviorTreeComponent* BTComp;
 
 	UPROPERTY(VisibleAnyWhere)
 	class UBlackboardData* BlackboardData;

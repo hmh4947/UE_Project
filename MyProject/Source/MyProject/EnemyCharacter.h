@@ -21,7 +21,7 @@ class MYPROJECT_API AEnemyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
-
+	virtual void Initialize();
 
 protected:
 	// Called when the game starts or when spawned

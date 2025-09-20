@@ -17,6 +17,7 @@ class MYPROJECT_API UHUDWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
 
 	//Player HealthBar
 	UPROPERTY(meta = (BindWidget))
@@ -55,6 +56,8 @@ public:
 	void UpdateESkillPercent(float  Percent, ASkills* Skill);
 	void UpdateRSkillPercent(float  Percent, ASkills* Skill);
 
+	UFUNCTION()
+	void SetVisibleEnemyHealthBar();
 
 	
 private:

@@ -35,9 +35,9 @@ EBTNodeResult::Type UBTTask_RLState::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	if (!BB) return EBTNodeResult::Failed;
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	if (!AIController) return EBTNodeResult::Failed;
-	AABAIController* EnemyContorller = Cast<AABAIController>(AIController);
-	if(!EnemyContorller)return EBTNodeResult::Failed;
-	APawn* pawn = EnemyContorller->GetPawn();
+	AABAIController* EnemyController = Cast<AABAIController>(AIController);
+	
+	APawn* pawn = EnemyController->GetPawn();
 	if(!pawn) return EBTNodeResult::Failed;
 	TestSendRLDecision(pawn, BB);
 	return EBTNodeResult::Type();
@@ -45,6 +45,12 @@ EBTNodeResult::Type UBTTask_RLState::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 
 void UBTTask_RLState::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
+}
+
+void UBTTask_RLState::Initialize()
+{
+	TotalReward = 0;
+	TotalRewardArray.Empty();
 }
 
 FString UBTTask_RLState::SendStateToExternal(APawn* pawn)
@@ -197,6 +203,7 @@ int32 UBTTask_RLState::GetReceivedSkillIndex() const
 {
 	return receivedIndex;
 }
+
 
 void UBTTask_RLState::UpdateReward(float reward)
 {

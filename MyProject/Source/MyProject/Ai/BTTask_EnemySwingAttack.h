@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyTaskNode.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_EnemySwingAttack.generated.h"
 
@@ -15,11 +16,13 @@ class UBlackboardComponent;
 class ATrainSkills;
 
 UCLASS()
-class MYPROJECT_API UBTTask_EnemySwingAttack : public UBTTaskNode
+class MYPROJECT_API UBTTask_EnemySwingAttack : public UMyTaskNode
 {
 	GENERATED_BODY()
 public:
 	UBTTask_EnemySwingAttack();
+
+	void Initialize() override;
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;

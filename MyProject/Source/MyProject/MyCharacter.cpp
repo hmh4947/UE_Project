@@ -81,6 +81,10 @@ void AMyCharacter::BeginPlay()
 	
 }
 
+void AMyCharacter::Initialize()
+{
+}
+
 // Called every frame
 void AMyCharacter::Tick(float DeltaSeconds)
 {

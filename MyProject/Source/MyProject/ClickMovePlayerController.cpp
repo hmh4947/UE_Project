@@ -15,6 +15,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Blueprint/UserWidget.h"
+#include "MyProject/UI/GameOverWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
 
@@ -35,6 +36,21 @@ AClickMovePlayerController::AClickMovePlayerController()
 		GetWorld()->GetTimerManager();
 		
 	}
+	static ConstructorHelpers::FClassFinder<UGameOverWidget>GameOver(TEXT("/Game/UI/WBP_GameOver.WBP_GameOver_C"));
+	if (GameOver.Succeeded())
+	{
+		GameOverWidgetClass = GameOver.Class;
+	}
+
+}
+
+void AClickMovePlayerController::Initialize()
+{
+	bShowMouseCursor = true;
+	IsMoving = false;
+	FollowTime = 0.f;
+	Dashcool = false;
+	
 }
 
 
@@ -74,7 +90,10 @@ void AClickMovePlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-	
+	if (WarriorCharacterInstance)
+	{
+		WarriorCharacterInstance->OnCharacterDied.AddDynamic(this, &AClickMovePlayerController::CreateGameOverWidget);
+	}
 }
 void AClickMovePlayerController::UpdateHealthPercent(float HealthPercent)
 {
@@ -113,6 +132,7 @@ void AClickMovePlayerController::UpdateRSkillCoolDown(float Percent, ASkills* Sk
 }
 void AClickMovePlayerController::InputRightMouseButtonPressed()
 {
+	if (WarriorCharacterInstance->isDeath == true) return;
 	WarriorCharacterInstance->GetCharacterMovement()->MaxWalkSpeed=600.f;
 	IsDash = false;
 	//공격중 이동 불가
@@ -165,6 +185,7 @@ void AClickMovePlayerController::SetNewDestination(const FVector Destination)
 
 void AClickMovePlayerController::MoveToMouseCursor()
 {
+	if (WarriorCharacterInstance->isDeath == true) return;
 	FollowTime += GetWorld()->GetDeltaSeconds();
 
 
@@ -368,6 +389,21 @@ void AClickMovePlayerController::coolTimer()
 	
 	}
 
+	
+}
+
+void AClickMovePlayerController::CreateGameOverWidget()
+{
+	if (!GameOverWidgetClass) return;
+	if (GameOverWidget)
+	{
+		GameOverWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		GameOverWidget = CreateWidget<UGameOverWidget>(GetWorld()->GetFirstPlayerController(), GameOverWidgetClass);
+		GameOverWidget->AddToViewport();
+	}
 	
 }
 

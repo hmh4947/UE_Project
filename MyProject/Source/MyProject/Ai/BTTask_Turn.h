@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyTaskNode.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "BTTask_Turn.generated.h"
 
@@ -10,7 +11,7 @@
  * 
  */
 UCLASS()
-class MYPROJECT_API UBTTask_Turn : public UBTTaskNode
+class MYPROJECT_API UBTTask_Turn : public UMyTaskNode
 {
 	GENERATED_BODY()
 	

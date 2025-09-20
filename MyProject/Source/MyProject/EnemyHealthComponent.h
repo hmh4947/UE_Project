@@ -20,16 +20,13 @@ public:
 
 	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	
-	void LoseHealth(float Amount) override;
+	void SetMaxHealth(float amount) override;
+	void SetHealth(float amount) override;
+	void LoseHealth(float  amount) override;
 
-	UPROPERTY( EditAnywhere, Category = Health)
-	float MaxEnemyHealth;
+	
 
 	UPROPERTY()
 	class USevargoEnemyAnimInstance* ABAnim;
-	FORCEINLINE float GetHealthPercent() const { return Health / MaxEnemyHealth; }
-
-private: 
-	float EnemyHealth;
+	FORCEINLINE float GetHealthPercent() const { return this->health / this->maxHealth;}
 };
