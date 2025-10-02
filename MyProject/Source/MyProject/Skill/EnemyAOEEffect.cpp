@@ -52,7 +52,7 @@ void AEnemyAOEEffect::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 	}
 	if (isDamage)
 	{
-		//	this->hit_count += 1;
+			//this->hit_count += 1;
 	}
 }
 
@@ -63,9 +63,9 @@ void AEnemyAOEEffect::BeginPlay()
 	Super::BeginPlay();
 	if (UNiagaraComponent* NiagaraComp = FindComponentByClass<UNiagaraComponent>())
 	{
-		NiagaraComp->OnSystemFinished.AddDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
+		NiagaraComp->OnSystemFinished.AddUniqueDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
 	}
-	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AEnemyAOEEffect::OnBeginOverlap);
+	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEnemyAOEEffect::OnBeginOverlap);
 }
 
 

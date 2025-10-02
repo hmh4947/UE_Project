@@ -67,8 +67,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Widget")
 	UDialogWidget* Dialog;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dialog")
-	UDialogNodeAsset* eventDialogAsset;
 private:
 	UFUNCTION()
 	void OnStartcutsceneEndReached();

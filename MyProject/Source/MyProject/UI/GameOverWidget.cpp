@@ -13,6 +13,13 @@ void UGameOverWidget::NativeConstruct()
     QuitButton->OnClicked.AddDynamic(this, &UGameOverWidget::OnClickQuit);
 }
 
+void UGameOverWidget::NativeDestruct()
+{
+    RestartButton->OnClicked.Clear();
+    SkipRestartButton->OnClicked.Clear();
+    QuitButton->OnClicked.Clear();
+}
+
 void UGameOverWidget::OnClickStart()
 {
 

@@ -76,7 +76,7 @@ private:
 	UFUNCTION()
 	void TestSendRLDecision();
 
-
+	UPROPERTY()
 	USkillComponent* SkillComponent;
 
 };

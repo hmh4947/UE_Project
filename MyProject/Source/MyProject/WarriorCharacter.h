@@ -162,9 +162,14 @@ public:
 
 	void MeleeTrace();
 	void MeleeTraceGetHitActor();
+
+	UPROPERTY()
 	TArray<FVector> MeleeTracePrevious;
+
+	UPROPERTY()
 	TArray<FVector> MeleeTraceCurrent;
 
+	UPROPERTY()
 	TArray<FHitResult> HitResults;
 
 
@@ -180,6 +185,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Damage)
 	float Damage = 100.f;
+
+	UPROPERTY()
 	FHitResult HitTrace;
 	bool bHit;
 

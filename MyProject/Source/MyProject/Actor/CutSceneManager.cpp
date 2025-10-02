@@ -43,10 +43,7 @@ void ACutSceneManager::OnStartcutsceneEndReached()
 void ACutSceneManager::OnEventcutsceneEndReached()
 {
 	ClosedWidget();
-	if (!eventDialogAsset)return;
 
-	//Dialog->RootNode= eventDialogAsset;
-	//위젯 이벤트
 
 
 }

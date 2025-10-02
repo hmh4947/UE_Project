@@ -83,7 +83,7 @@ void AEnemyUltimateSwingSkill::ReuseObjects()
 	AUltimateSwingEffect* SkillEffect = Cast<AUltimateSwingEffect>(Instances);
 	if (!SkillEffect) return;
 	//바인딩(나이아가라 끝나는 타이밍)
-	SkillEffect->EffectFinished.AddDynamic(this, &AEnemyUltimateSwingSkill::OnEffectEnd);
+	SkillEffect->EffectFinished.AddUniqueDynamic(this, &AEnemyUltimateSwingSkill::OnEffectEnd);
 
 	Instances->SetActorHiddenInGame(false);
 	NiagaraComp->SetHiddenInGame(false);

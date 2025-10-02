@@ -78,14 +78,14 @@ void AEnemyAOESkill::ReuseObjects()
 		AEnemyAOEEffect* SkillEffect = Cast<AEnemyAOEEffect>(Obj);
 		if(!SkillEffect) continue;
 		//바인딩(나이아가라 끝나는 타이밍)
-		SkillEffect->EffectFinished.AddDynamic(this, &AEnemyAOESkill::OnEffectEnd);
+		SkillEffect->EffectFinished.AddUniqueDynamic(this, &AEnemyAOESkill::OnEffectEnd);
 		
 		Obj->SetActorHiddenInGame(false);	
 		NiagaraComp->SetHiddenInGame(false);
 		NiagaraComp->DeactivateImmediate();  // 이전 상태 초기화
 		NiagaraComp->Activate(true);
 		Obj->SetActorEnableCollision(true);
-		
+		//SkillEffect->EffectFinished.RemoveDynamic(this, &AEnemyAOESkill::OnEffectEnd);
 	}
 
 }

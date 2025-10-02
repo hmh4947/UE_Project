@@ -12,6 +12,11 @@ void UHUDWidget::NativeConstruct()
 	EnemyHealthBar->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UHUDWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UHUDWidget::UpdateHealthPercent(float HealthPercent)
 {
 	HealthBar->SetPercent(HealthPercent);

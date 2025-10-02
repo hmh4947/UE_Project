@@ -30,6 +30,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBoxComponent* BoxCollision;
+
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<AActor> spawnEnemy;
 

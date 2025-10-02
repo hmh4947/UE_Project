@@ -21,7 +21,7 @@ class MYPROJECT_API UChoicesWidget : public UUserWidget
 	GENERATED_BODY()
 public:
     virtual void NativeConstruct() override;
-
+    virtual void NativeDestruct() override;
     UFUNCTION()
     void HandleClicked();
 
@@ -39,5 +39,5 @@ public:
     UDialogChoiceAsset* ChoiceData;
 
     void SetChoiceText(const FText& text);
-    void SetupChoice(UDialogChoiceAsset* InChoice);
+   // void SetupChoice(UDialogChoiceAsset* InChoice);
 };

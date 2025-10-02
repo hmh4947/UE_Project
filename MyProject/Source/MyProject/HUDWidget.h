@@ -11,6 +11,8 @@
  * 
  */
 class ASkills;
+class UProgressBar;
+class UTextBlock;
 UCLASS()
 class MYPROJECT_API UHUDWidget : public UUserWidget
 {
@@ -18,33 +20,33 @@ class MYPROJECT_API UHUDWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
-
+	virtual void NativeDestruct() override;
 	//Player HealthBar
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* HealthBar;
+	UProgressBar* HealthBar;
 
 	//Enemy HealthBar
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* EnemyHealthBar;
+	UProgressBar* EnemyHealthBar;
 
 	//Skills
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* Skill_Q;
+	UProgressBar* Skill_Q;
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* Skill_W;
+	UProgressBar* Skill_W;
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* Skill_E;
+	UProgressBar* Skill_E;
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* Skill_R;
+	UProgressBar* Skill_R;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* SkillCool_Q;
+	UTextBlock* SkillCool_Q;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* SkillCool_W;
+	UTextBlock* SkillCool_W;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* SkillCool_E;
+	UTextBlock* SkillCool_E;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* SkillCool_R;
+	UTextBlock* SkillCool_R;
 	
 
 	void UpdateHealthPercent(float HealthPercent);

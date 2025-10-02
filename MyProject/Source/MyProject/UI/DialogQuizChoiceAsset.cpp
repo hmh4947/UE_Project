@@ -1,8 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyProject/UI/EndChoiceAsset.h"
-
-
-
+#include "MyProject/UI/DialogQuizChoiceAsset.h"
 

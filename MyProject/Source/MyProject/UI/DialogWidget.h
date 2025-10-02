@@ -26,6 +26,8 @@ class MYPROJECT_API UDialogWidget : public UUserWidget
 public:
 	//UserWidget Class에서 BeginPlay 역할
 	virtual void NativeConstruct() override;
+	//Viewport 에서 Remove 될 때
+	virtual void NativeDestruct() override;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Name;

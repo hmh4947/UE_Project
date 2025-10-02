@@ -19,8 +19,12 @@ public:
 	USkeletalMeshComponent* Weapon;
 
 	void MeleeTrace();
+
+	UPROPERTY()
 	TArray<FVector> MeleeTracePrevious;
+	UPROPERTY()
 	TArray<FVector> MeleeTraceCurrent;
+	UPROPERTY()
 	TArray<FHitResult> WallHit;
 	bool bMeleeBlocked;
 

@@ -14,7 +14,7 @@
 #include "MyProject/UI/DialogChoiceAsset.h"
 #include "MyProject/UI/DialogNodeAsset.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
-
+#include "MyProject/UI/DialogQuizChoiceAsset.h"
 #include "Styling/SlateBrush.h"
 
 
@@ -24,9 +24,32 @@ void UDialogWidget::NativeConstruct()
 {
 	
 	Super::NativeConstruct();
-
+	Init();
 	ShowNode(RootNode);
 	
+	
+}
+
+void UDialogWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+	ChoiceContainer->ClearChildren();
+	ChoiceMap.Empty();
+	TempNextNode = nullptr;
+	RootNode = nullptr;
+	if (NextButton)
+	{
+		NextButton->OnClicked.Clear();
+
+	}
+	for (auto& choice : ChoiceMap)
+	{
+		if (choice.Key)
+		{
+			//남아있는 바인딩 제거
+			choice.Key->OnChoiceSelected.RemoveDynamic(this, &UDialogWidget::OnChoiceSelectedFun);
+		}
+	}
 	
 }
 
@@ -35,7 +58,15 @@ void UDialogWidget::NativeConstruct()
 void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 {
 	ChoiceContainer->ClearChildren();
-
+	if (!Node) return;
+	for (auto& choice : ChoiceMap)
+	{
+		if (choice.Key)
+		{
+			//남아있는 바인딩 제거
+			choice.Key->OnChoiceSelected.RemoveDynamic(this, &UDialogWidget::OnChoiceSelectedFun);
+		}
+	}
 	for (UDialogChoiceAsset* Choice : Node->Choices)
 	{
 		if (!Choice) continue;
@@ -44,7 +75,7 @@ void UDialogWidget::ShowNode(UDialogNodeAsset* Node)
 		UChoicesWidget* ChoiceWidget = CreateWidget<UChoicesWidget>(this, ChoiceWidgetClass);
 		if (!ChoiceWidget) continue;
 
-		ChoiceWidget->SetupChoice(Choice);
+		
 		ChoiceWidget->SetChoiceText(Choice->ChoiceText);
 
 		// 선택지 버튼 바인딩 
@@ -105,6 +136,18 @@ void UDialogWidget::OnNextClicked()
 
 void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 {
+	UDialogQuizChoiceAsset* QuizChoice = Cast< UDialogQuizChoiceAsset>(ChosenButton);
+	if (QuizChoice)
+	{
+		if(QuizChoice->isCorrect)
+		{
+			ShowNode(QuizChoice->NextNode);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("NOT CORRECT!"));
+		}
+	}
 	if (ChosenButton)
 	{
 		// 선택 후 대사 출력

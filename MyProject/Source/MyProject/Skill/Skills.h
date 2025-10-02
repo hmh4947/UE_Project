@@ -68,11 +68,17 @@ public:
 	virtual void MeleeTrace();
 	bool bMeleeBlocked;
 
+	UPROPERTY()
 	TArray<FVector> MeleeTracePrevious;
+
+	UPROPERTY()
 	TArray<FVector> MeleeTraceCurrent;
+
+	UPROPERTY()
 
 	TArray<FHitResult> HitResults;
 	FHitResult HitTrace;
+
 	bool bHit;
 	bool isLoseHealth;
 	virtual void LoseHealth();

@@ -19,7 +19,7 @@ class MYPROJECT_API UGameOverWidget : public UUserWidget
 public: 
 
 	virtual void NativeConstruct() override;
-
+	virtual void NativeDestruct() override;
 	UFUNCTION()
 	void OnClickStart();
 

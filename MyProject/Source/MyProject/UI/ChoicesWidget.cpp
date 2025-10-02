@@ -16,6 +16,17 @@ void UChoicesWidget::NativeConstruct()
 	}
 }
 
+void UChoicesWidget::NativeDestruct()
+{
+	
+	Super::NativeDestruct();
+	ChoiceButton->OnClicked.Clear();
+	OnChoiceSelected.Clear();
+	ChoiceData = nullptr;
+	ChoiceText = nullptr;
+	ChoiceButton=nullptr;
+}
+
 void UChoicesWidget::HandleClicked()
 {
 	OnChoiceSelected.Broadcast(ChoiceData);
@@ -26,7 +37,5 @@ void UChoicesWidget::SetChoiceText(const FText& text)
 	ChoiceText->SetText(text);
 }
 
-void UChoicesWidget::SetupChoice(UDialogChoiceAsset* InChoice)
-{
-	
-}
+
+
