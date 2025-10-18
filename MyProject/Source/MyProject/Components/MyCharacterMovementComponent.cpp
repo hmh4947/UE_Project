@@ -8,18 +8,39 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 
+
 #include "DrawDebugHelpers.h"
 
 
 
 void UMyCharacterMovementComponent::PerformMovement(float DeltaTime)
 {
-
+    bool bCheck = false;
     if (!CharacterOwner || !CharacterOwner->GetMesh())
     {
         Super::PerformMovement(DeltaTime);
         return;
     }
+
+    UAnimInstance* AnimInstance = CharacterOwner->GetMesh()->GetAnimInstance();
+    if (!AnimInstance)
+    {
+        Super::PerformMovement(DeltaTime);
+        return;
+    }
+    UAnimMontage* CurrentMontage = AnimInstance->GetCurrentActiveMontage();
+
+
+    if (CurrentMontage)
+    {
+        const FName MontageName = CurrentMontage->GetFName();
+
+        if (MontageName == FName("AM_SwordSlash"))
+        {
+            bCheck = true;
+        }
+    }
+
     FRootMotionMovementParams RMParams = CharacterOwner->GetMesh()->ConsumeRootMotion();
     FVector RootMotionDelta = FVector::ZeroVector;
     if (RMParams.bHasRootMotion)
@@ -28,60 +49,63 @@ void UMyCharacterMovementComponent::PerformMovement(float DeltaTime)
 
         FTransform WorldTM = CharacterOwner->GetMesh()->ConvertLocalRootMotionToWorld(RootMotionTransform);
         RootMotionDelta = WorldTM.GetTranslation(); // 이동량만 추출
+
     }
     FVector Start = UpdatedComponent->GetComponentLocation();
     FVector End = Start + RootMotionDelta;
-
-    UAnimInstance* AnimInstance = CharacterOwner->GetMesh()->GetAnimInstance();
-    if (!AnimInstance)
+    FHitResult HitResult;
+    FRotator Rotator = UpdatedComponent->GetComponentQuat().Rotator();
+    if (bCheck)
     {
-        Super::PerformMovement(DeltaTime);
-        return;
-    }
+        if (IsFloorBelow(End))
+        {
+            // 바닥이 있으면 그대로 이동
+         
+            AnimInstance->RootMotionMode = ERootMotionMode::RootMotionFromEverything;
+            SafeMoveUpdatedComponent(RootMotionDelta, Rotator, true, HitResult);
+        }
 
-    if (IsFloorBelow(End))
-    {
-        // 바닥이 있으면 그대로 이동
-        FHitResult HitResult;
-        FRotator Rotator = UpdatedComponent->GetComponentQuat().Rotator();
-        AnimInstance->RootMotionMode = ERootMotionMode::RootMotionFromEverything;
-        SafeMoveUpdatedComponent(RootMotionDelta, Rotator, true, HitResult);
-    }
+        else
+        {
+            // 바닥 없으면 최대 안전 거리 계산 (binary search)
+            float Low = 0.f, High = 1.f;
+            for (int i = 0; i < 6; ++i) // 반복 횟수로 정확도 조절
+            {
+                float Mid = (Low + High) * 0.5f;
+                FVector TestPos = Start + RootMotionDelta * Mid;
+                if (IsFloorBelow(TestPos))
+                    Low = Mid;
+                else
+                    High = Mid;
+            }
 
+            FVector SafeDelta = RootMotionDelta * Low;
+            if (!SafeDelta.IsNearlyZero())
+            {
+                
+                SafeMoveUpdatedComponent(SafeDelta, Rotator, true, HitResult);
+            }
+
+            // Root Motion은 소모되므로 남은 이동량은 버려집니다.
+            // 애니메이션은 끝까지 재생됩니다.
+            AnimInstance->RootMotionMode = ERootMotionMode::IgnoreRootMotion;
+        }
+    }
     else
     {
-        // 바닥 없으면 최대 안전 거리 계산 (binary search)
-        float Low = 0.f, High = 1.f;
-        for (int i = 0; i < 6; ++i) // 반복 횟수로 정확도 조절
+        // 다른 일반 애니메이션은 검사 없이 Root Motion 그대로 적용
+        if (!RootMotionDelta.IsNearlyZero())
         {
-            float Mid = (Low + High) * 0.5f;
-            FVector TestPos = Start + RootMotionDelta * Mid;
-            if (IsFloorBelow(TestPos))
-                Low = Mid;
-            else
-                High = Mid;
+            SafeMoveUpdatedComponent(RootMotionDelta, Rotator, true, HitResult);
         }
-
-        FVector SafeDelta = RootMotionDelta * Low;
-        if (!SafeDelta.IsNearlyZero())
-        {
-            FHitResult HitResult;
-            FRotator Rotator = UpdatedComponent->GetComponentQuat().Rotator();
-            SafeMoveUpdatedComponent(SafeDelta, Rotator, true, HitResult);
-        }
-
-        // Root Motion은 소모되므로 남은 이동량은 버려집니다.
-        // 애니메이션은 끝까지 재생됩니다.
-        AnimInstance->RootMotionMode = ERootMotionMode::IgnoreRootMotion;
     }
-
     // 기본 이동 처리
     Super::PerformMovement(DeltaTime);
 }
 
 bool UMyCharacterMovementComponent::IsFloorBelow(const FVector& Point) const
 {
-   // ACharacter* CharacterOwner = Cast<ACharacter>(GetOwner());
+
     if (!CharacterOwner) return false;
 
     FVector Forward = CharacterOwner->GetActorForwardVector();
@@ -100,4 +124,3 @@ bool UMyCharacterMovementComponent::IsFloorBelow(const FVector& Point) const
 #endif
     return bHit && Hit.bBlockingHit;
 }
-

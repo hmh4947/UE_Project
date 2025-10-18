@@ -37,12 +37,12 @@ class MYPROJECT_API AWarriorCharacter : public AMyCharacter, public IHealthInter
 
 	
 	virtual void PostInitializeComponents() override;
+public:
 
 	UPROPERTY(EditAnywhere)
 	USkillComponent* skillComponent;
 
 	void setCurrentSkill(AActor* skill);
-public:
 
 	AWarriorCharacter();
 

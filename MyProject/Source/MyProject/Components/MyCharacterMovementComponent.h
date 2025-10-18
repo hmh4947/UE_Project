@@ -9,6 +9,7 @@
 /**
  * 
  */
+class UAnimMontage;
 UCLASS()
 class MYPROJECT_API UMyCharacterMovementComponent : public UCharacterMovementComponent
 {
@@ -18,4 +19,6 @@ public:
 
 	void PerformMovement(float DeltaTime) override;
 	bool IsFloorBelow(const FVector& Point) const;
+	
+
 };

@@ -130,6 +130,25 @@ void UDialogWidget::OnNextClicked()
 		SetVisibility(ESlateVisibility::Collapsed);
 		Controller->UnBlockWorldClick();
 		
+		//
+		
+		ChoiceContainer->ClearChildren();
+		ChoiceMap.Empty();
+		TempNextNode = nullptr;
+		RootNode = nullptr;
+		if (NextButton)
+		{
+			NextButton->OnClicked.Clear();
+
+		}
+		for (auto& choice : ChoiceMap)
+		{
+			if (choice.Key)
+			{
+				//남아있는 바인딩 제거
+				choice.Key->OnChoiceSelected.RemoveDynamic(this, &UDialogWidget::OnChoiceSelectedFun);
+			}
+		}
 	}
 	
 }
