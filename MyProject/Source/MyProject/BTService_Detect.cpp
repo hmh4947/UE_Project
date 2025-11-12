@@ -41,41 +41,39 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Red, false, 0.2f);
 
-	if (bResult) {
+	UBlackboardComponent* BB = OwnerComp.GetBlackboardComponent();
+	AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(AABAIController::TargetKey));
 
-
-		for (auto& OverlapResult : OverlapResults) {
+	if (bResult)
+	{
+		for (auto& OverlapResult : OverlapResults)
+		{
 			AMyCharacter* MyCharacter = Cast<AMyCharacter>(OverlapResult.GetActor());
-			//컨트롤러가 플레이어의 컨트롤러인지 체크
 			if (MyCharacter && MyCharacter->GetController()->IsPlayerController())
 			{
-				OwnerComp.GetBlackboardComponent()->SetValueAsObject(AABAIController::TargetKey, MyCharacter);
-				UE_LOG(LogTemp, Warning, (TEXT("DETECT")));
+				// 이미 같은 Target이면 다시 세팅하지 않음
+				if (CurrentTarget != MyCharacter)
+				{
+					BB->SetValueAsObject(AABAIController::TargetKey, MyCharacter);
+					UE_LOG(LogTemp, Warning, TEXT("[Detect] Target SET → %s"), *MyCharacter->GetName());
+				}
+
+				// 감지 유지용 시각화
 				DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Green, false, 0.2f);
-				DrawDebugPoint(World, MyCharacter->GetActorLocation(), 10.0f, FColor::Blue, false, 0.2f);
 				DrawDebugLine(World, ControllingPawn->GetActorLocation(), MyCharacter->GetActorLocation(), FColor::Blue, false, 0.2f);
 				return;
-
-
 			}
-
 		}
-
 	}
-/*	else {
-
-
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(AABAIController::TargetKey, nullptr);
-
-
-
+	else
+	{
+		//Target이 존재할 때만 해제 처리
+		if (CurrentTarget != nullptr)
+		{
+			BB->SetValueAsObject(AABAIController::TargetKey, nullptr);
+			UE_LOG(LogTemp, Warning, TEXT("[Detect] Target CLEARED"));
+		}
 	}
-	*/
-	OwnerComp.GetBlackboardComponent()->SetValueAsObject(AABAIController::TargetKey, nullptr);
-
-	DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Red, false, 0.2f);
-	UE_LOG(LogTemp, Warning, (TEXT("NOT DETECT")));
-
 
 
 }

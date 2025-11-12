@@ -77,8 +77,10 @@ void AABAIController::OnPossess(APawn* InPawn)
 
 	if (UseBlackboard(BlackboardData, Blackboard))
 	{
+		Blackboard->SetValueAsVector(HomePosKey, InPawn->GetActorLocation());
 		RunBehaviorTree(BehaviorTree);
 	}
+	
 }
 
 //ºùÀÇ ÇØÁ¦

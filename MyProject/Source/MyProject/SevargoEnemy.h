@@ -35,9 +35,7 @@ public:
 
 	virtual void OnTakeDamage_Implementation() override;
 
-	/*UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	UHealthComponent* HealthComponent;
-	*/
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UEnemyHealthComponent* EnemyHealthComponent;
 
@@ -70,8 +68,6 @@ public:
 
 	UPROPERTY(EditAnyWhere,BlueprintReadOnly)
 	USkillComponent* SkillComponent;
-
-	//ACutSceneManager* cutSceneManager;
 
 private:
 	UPROPERTY()

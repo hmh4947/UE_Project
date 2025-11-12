@@ -17,6 +17,7 @@
 #include "MyProject/SevargoEnemy.h"
 #include "MyProject/UI/DialogWidget.h"
 #include "MyProject/UI/DialogNodeAsset.h"
+#include "MyProject/UI/GameClearWidget.h"
 
 // Sets default values
 ACutSceneManager::ACutSceneManager()
@@ -43,14 +44,43 @@ void ACutSceneManager::OnStartcutsceneEndReached()
 void ACutSceneManager::OnEventcutsceneEndReached()
 {
 	ClosedWidget();
+	UE_LOG(LogTemp, Warning, TEXT("EventCutscene End Start Dialog System!!!!"));
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
 
+		if (!DialogWidgetClass) //BP 클래스가 설정되었는지 확인
+		{
+			UE_LOG(LogTemp, Error, TEXT("PC or DialogWidgetClass missing"));
+			return;
+		}
+
+		Dialog = CreateWidget<UDialogWidget>(PC, DialogWidgetClass); //BP 사용
+		if (!Dialog)
+		{
+			UE_LOG(LogTemp, Error, TEXT("CreateWidget failed"));
+			return;
+		}
+		Dialog->RootNode = RootNodeAsset;   // RootNode를 Init에서 쓴다면 Init 이전에 세팅
+		Dialog->AddToViewport();            // 이 시점에 내부 위젯들이 Construct됨
+		Dialog->Init();
+	}
 
 
 }
 
 void ACutSceneManager::OnEndcutsceneEndReached()
 {
-	ClosedWidget();
+	
+	//ClosedWidget();
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC) {
+		if (!GameClearWidgetClass) return;
+
+		GameClearWidget = CreateWidget<UGameClearWidget>(PC, GameClearWidgetClass); //BP 사용
+		if (!GameClearWidget)return;
+		GameClearWidget->AddToViewport();
+	}
 	
 }
 
@@ -74,6 +104,8 @@ void ACutSceneManager::SetVisibleEnemyHealthBar()
 
 
 }
+
+
 
 
 

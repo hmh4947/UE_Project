@@ -69,6 +69,18 @@ public:
 	void OnNextClicked();
 	UFUNCTION()
 	void OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton);
+
+	
+
+	void EndDialog();
+	UPROPERTY(BlueprintReadOnly, Category = "Quiz")
+	int32 TotalQuizCount = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Quiz")
+	int32 CorrectQuizCount = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Quiz")
+	bool bDialogEnded = false;
 private:
 	UPROPERTY()
 	UDialogNodeAsset* TempNextNode;

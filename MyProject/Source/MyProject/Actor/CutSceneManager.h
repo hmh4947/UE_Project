@@ -14,6 +14,8 @@ class UHUDWidget;
 class ACharacter;
 class ASevargoEnemy;
 class UDialogNodeAsset;
+class UGameClearWidget;
+
 UENUM(BlueprintType)
 enum class ECutSceneType:uint8
 {
@@ -36,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="Cutscenes")
 
 	TMap<ECutSceneType, UMediaSource*> CutsceneMap;
+
+	
 
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
@@ -67,6 +71,17 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Widget")
 	UDialogWidget* Dialog;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UDialogWidget> DialogWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Widget")
+	UGameClearWidget* GameClearWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UGameClearWidget> GameClearWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	UDialogNodeAsset* RootNodeAsset;
 private:
 	UFUNCTION()
 	void OnStartcutsceneEndReached();
@@ -86,10 +101,7 @@ private:
 
 	ACharacter* playerCharacter;
 
-
 	
-
-
 
 private:
 

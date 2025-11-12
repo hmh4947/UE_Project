@@ -55,39 +55,37 @@ void AEnemyAOESkill::InitObjects()
 void AEnemyAOESkill::ReuseObjects()
 {
 	ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(GetOwner());
-	
+	if (!Enemy) return;
+
 	float enemyLocationX = Enemy->GetActorLocation().X;
 	float enemyLocationY = Enemy->GetActorLocation().Y;
-	for(AActor* Obj:Instances)
+
+	for (AActor* Obj : Instances)
 	{
 		if (!Obj) continue;
-		
-		float randLocationX=FMath::RandRange(enemyLocationX +(-500.f), enemyLocationX+500.f);
-		float randLocationY = FMath::RandRange(enemyLocationY + (-500.f), enemyLocationY+ 500.f);
+
+		float randLocationX = FMath::RandRange(enemyLocationX - 500.f, enemyLocationX + 500.f);
+		float randLocationY = FMath::RandRange(enemyLocationY - 500.f, enemyLocationY + 500.f);
 		FVector spawnVector = FVector(randLocationX, randLocationY, 0);
 		Obj->SetActorLocation(spawnVector);
-		
 
 		UNiagaraComponent* NiagaraComp = Obj->FindComponentByClass<UNiagaraComponent>();
 		if (!NiagaraComp) continue;
 		USphereComponent* SphereComponent = Obj->FindComponentByClass<USphereComponent>();
-		if (!SphereComponent)  continue;
-
-		
-
+		if (!SphereComponent) continue;
 		AEnemyAOEEffect* SkillEffect = Cast<AEnemyAOEEffect>(Obj);
-		if(!SkillEffect) continue;
-		//바인딩(나이아가라 끝나는 타이밍)
-		SkillEffect->EffectFinished.AddUniqueDynamic(this, &AEnemyAOESkill::OnEffectEnd);
-		
-		Obj->SetActorHiddenInGame(false);	
-		NiagaraComp->SetHiddenInGame(false);
-		NiagaraComp->DeactivateImmediate();  // 이전 상태 초기화
-		NiagaraComp->Activate(true);
-		Obj->SetActorEnableCollision(true);
-		//SkillEffect->EffectFinished.RemoveDynamic(this, &AEnemyAOESkill::OnEffectEnd);
-	}
+		if (!SkillEffect) continue;
 
+		//재생 전 콜리전 비활성화
+		Obj->SetActorEnableCollision(false);
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//나이아가라 재시작
+		SkillEffect->EffectFinished.AddUniqueDynamic(this, &AEnemyAOESkill::OnEffectEnd);
+		Obj->SetActorHiddenInGame(false);
+		NiagaraComp->DeactivateImmediate();
+		NiagaraComp->Activate(true);
+	}
 }
 
 

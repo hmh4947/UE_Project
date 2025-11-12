@@ -36,6 +36,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UDialogNodeAsset* NextNode;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialog")
+	bool bIsFinalChapterEnd = false;
 	
 };

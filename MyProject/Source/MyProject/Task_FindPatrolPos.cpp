@@ -13,27 +13,28 @@ UTask_FindPatrolPos::UTask_FindPatrolPos()
 
 EBTNodeResult::Type UTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
-	auto ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (nullptr == ControllingPawn)
-	{
-		return EBTNodeResult::Failed;
-	}
-	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(ControllingPawn->GetWorld());
-	if (nullptr == NavSystem)
-	{
-		return EBTNodeResult::Failed;
+    Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	}
-	FVector Origin = OwnerComp.GetBlackboardComponent()->GetValueAsVector(AABAIController::HomePosKey);
-	FNavLocation NextPatrol;
+    AAIController* AICon = OwnerComp.GetAIOwner();
+    if (!AICon) return EBTNodeResult::Failed;
 
-	if (NavSystem->GetRandomPointInNavigableRadius(FVector::ZeroVector, 500.0f, NextPatrol))
-	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(AABAIController::PatrolPosKey, NextPatrol.Location);
-		return EBTNodeResult::Succeeded;
-	}
-	
+    APawn* ControlledPawn = AICon->GetPawn();
+    if (!ControlledPawn) return EBTNodeResult::Failed;
 
-	return EBTNodeResult::Failed;
+    UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(ControlledPawn->GetWorld());
+    if (!NavSystem) return EBTNodeResult::Failed;
+   
+
+    FNavLocation NextPatrol;
+    FVector Origin = ControlledPawn->GetActorLocation();
+    UE_LOG(LogTemp, Warning, TEXT("NavMesh valid: %d, Origin: %s"), NavSystem != nullptr, *Origin.ToString());
+    if (NavSystem->GetRandomPointInNavigableRadius(Origin, 800.0f, NextPatrol))
+    {
+        OwnerComp.GetBlackboardComponent()->SetValueAsVector(AABAIController::PatrolPosKey, NextPatrol.Location);
+        UE_LOG(LogTemp, Warning, TEXT("PatrolPos set: %s"), *NextPatrol.Location.ToString());
+        return EBTNodeResult::Succeeded;
+    }
+
+    UE_LOG(LogTemp, Warning, TEXT("PatrolPos not set (NavMesh fail)"));
+    return EBTNodeResult::Failed;
 }

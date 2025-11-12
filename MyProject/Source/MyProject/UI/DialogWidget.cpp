@@ -16,6 +16,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MyProject/UI/DialogQuizChoiceAsset.h"
 #include "Styling/SlateBrush.h"
+#include "MyProject/Actor/CutSceneManager.h"
 
 
 
@@ -122,6 +123,16 @@ void UDialogWidget::OnNextClicked()
 	}
 	else
 	{
+		if (!TempNextNode)
+		{
+			if (RootNode && RootNode->bIsFinalChapterEnd)
+			{
+				//전체 스토리의 마지막 대화라면 완전 종료
+				EndDialog();
+			}
+		
+		}
+		
 		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		AClickMovePlayerController* Controller = Cast<AClickMovePlayerController>(PC);
 		
@@ -158,8 +169,10 @@ void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 	UDialogQuizChoiceAsset* QuizChoice = Cast< UDialogQuizChoiceAsset>(ChosenButton);
 	if (QuizChoice)
 	{
+		TotalQuizCount++;
 		if(QuizChoice->isCorrect)
 		{
+			CorrectQuizCount++;
 			ShowNode(QuizChoice->NextNode);
 		}
 		else
@@ -185,6 +198,33 @@ void UDialogWidget::OnChoiceSelectedFun(UDialogChoiceAsset* ChosenButton)
 		}
 	
 	}
+}
+
+void UDialogWidget::EndDialog()
+{
+	bDialogEnded = true;
+
+	if (TotalQuizCount > 0)
+	{
+		if (CorrectQuizCount == TotalQuizCount)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SUCCESS"));
+			ACutSceneManager* CutSceneManager = Cast<ACutSceneManager>(
+				UGameplayStatics::GetActorOfClass(GetWorld(), ACutSceneManager::StaticClass()));
+
+			if (CutSceneManager)
+			{
+				CutSceneManager->PlayCutScene(ECutSceneType::BossEnd);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FAIL"));
+		//	실패
+		}
+	}
+
+	RemoveFromParent();
 }
 
 
