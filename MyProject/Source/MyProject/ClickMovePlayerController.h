@@ -7,7 +7,6 @@
 #include "GameFramework/PlayerController.h"
 #include "WarriorCharacter.h"
 #include "HUDWidget.h"
-#include "InventoryWidget.h"
 #include "ClickMovePlayerController.generated.h"
 
 
@@ -42,8 +41,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* IA_Dash; 
 
-	UPROPERTY(EditAnyWhere, Category=Input)
-	class UInputAction* IA_Inventory;
 
 
 
@@ -160,9 +157,7 @@ public:
 
 	UGameOverWidget* GameOverWidget;
 
-	//아이템 배열
-	UPROPERTY(BlueprintReadWrite)
-	TArray<FString> item;
+	
 
 	UFUNCTION()
 	void CreateGameOverWidget();

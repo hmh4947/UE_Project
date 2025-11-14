@@ -8,28 +8,41 @@
 // Sets default values
 AEnemyAOEEffect::AEnemyAOEEffect()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	NiagaraSystem = CreateDefaultSubobject<UNiagaraSystem>(TEXT("NiagaraSystem"));
-	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+	// SphereComponent → Root에 붙임
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	
-	NiagaraComponent->SetupAttachment(RootComponent);
-	SphereComponent->SetupAttachment(NiagaraComponent);
+	SphereComponent->SetupAttachment(RootComponent);
+
+	// Niagara → SphereComponent 아래로 붙임
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+	NiagaraComponent->SetupAttachment(SphereComponent);
 	NiagaraComponent->SetAutoActivate(false);
 
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SphereComponent->SetGenerateOverlapEvents(true);
+	SphereComponent->SetCollisionObjectType(ECC_WorldDynamic);
+	SphereComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+	SphereComponent->InitSphereRadius(116.f);
 }
-
-
-void AEnemyAOEEffect::FinishEffect(UNiagaraComponent* Niagara)
+// Called when the game starts or when spawned
+void AEnemyAOEEffect::BeginPlay()
 {
-	//UE_LOG(LogTemp, Log, TEXT("Niagara System Finished"));
-	//SphereComponent->SetActive(true);
+	Super::BeginPlay();
 
+	if (UNiagaraComponent* NiagaraComp = FindComponentByClass<UNiagaraComponent>())
+	{
+		NiagaraComp->OnSystemFinished.AddUniqueDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
+	}
+	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEnemyAOEEffect::OnBeginOverlap);
 }
+
+
 
 void AEnemyAOEEffect::HandleNiagaraFinished(UNiagaraComponent* Comp)
 {
+	
 	EffectFinished.Broadcast(this);
 }
 
@@ -57,16 +70,6 @@ void AEnemyAOEEffect::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 }
 
 
-// Called when the game starts or when spawned
-void AEnemyAOEEffect::BeginPlay()
-{
-	Super::BeginPlay();
-	if (UNiagaraComponent* NiagaraComp = FindComponentByClass<UNiagaraComponent>())
-	{
-		NiagaraComp->OnSystemFinished.AddUniqueDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
-	}
-	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEnemyAOEEffect::OnBeginOverlap);
-}
 
 
 // Called every frame

@@ -25,17 +25,15 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnEffectFinished EffectFinished;
 
-	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* NiagaraSystem;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX")
+	UNiagaraSystem* NiagaraEffect;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UNiagaraComponent* NiagaraComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USphereComponent* SphereComponent;
 
-	UFUNCTION()
-	void FinishEffect(UNiagaraComponent* Niagara);
 
 	UFUNCTION()
 	void HandleNiagaraFinished(UNiagaraComponent* Comp);

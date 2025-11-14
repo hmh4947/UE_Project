@@ -21,8 +21,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Widgets")
 	TSubclassOf<UMainMenu> MainMenuClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
-	TSubclassOf<UInteractionWidget> InteractionWidgetClass;
+	
 
 	bool bIsMenuVisible;
 
@@ -31,18 +30,13 @@ public:
 	void DisplayMenu();
 	void HideMenu();
 
-	void ShowInteractionWidget() const;
-	void HideInteractionWidget() const;
-	void UpdateInteractionWidget(const FInteractableData* InteractableData) const ;
 
 protected:
 
 	UPROPERTY()
 	UMainMenu* MainMenuWidget;
 
-	UPROPERTY()
-	UInteractionWidget* InteractionWidget;
-
+	
 
 	virtual void BeginPlay() override;
 };

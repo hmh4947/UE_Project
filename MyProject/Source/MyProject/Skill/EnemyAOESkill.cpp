@@ -37,7 +37,7 @@ void AEnemyAOESkill::InitObjects()
 		
 		AEnemyAOEEffect* DamageAOE = GetWorld()->SpawnActor<AEnemyAOEEffect>(Instance);
 	
-		DamageAOE->SetActorEnableCollision(false);
+	
 		DamageAOE->SetActorHiddenInGame(true);
 		DamageAOE->setDamage(damage);
 		UNiagaraComponent* NiagaraComp = DamageAOE->FindComponentByClass<UNiagaraComponent>();
@@ -47,7 +47,6 @@ void AEnemyAOESkill::InitObjects()
 		NiagaraComp->SetAutoDestroy(false);
 		USphereComponent* SphereComponent = DamageAOE->FindComponentByClass<USphereComponent>();
 		if (!SphereComponent) return;
-		SphereComponent->SetActive(false);
 		Instances.Add(DamageAOE);
 	}
 }
@@ -77,7 +76,7 @@ void AEnemyAOESkill::ReuseObjects()
 		if (!SkillEffect) continue;
 
 		//재생 전 콜리전 비활성화
-		Obj->SetActorEnableCollision(false);
+	
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//나이아가라 재시작

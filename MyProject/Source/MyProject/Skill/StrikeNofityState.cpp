@@ -8,6 +8,7 @@
 
 void UStrikeNofityState::BranchingPointNotifyBegin(FBranchingPointNotifyPayload& BranchingPointPayload)
 {
+	
 	NotifyBegin(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, BranchingPointPayload.NotifyEvent ? BranchingPointPayload.NotifyEvent->GetDuration() : 0.f);
 
 }
@@ -32,7 +33,7 @@ void UStrikeNofityState::BranchingPointNotifyTick(FBranchingPointNotifyPayload& 
 
 	}*/
 	else {
-		NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset);
+		NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, FAnimNotifyEventReference());
 
 	}
 }
@@ -58,6 +59,6 @@ void UStrikeNofityState::BranchingPointNotifyEnd(FBranchingPointNotifyPayload& B
 	}
 
 
-	NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset);
+	NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, FAnimNotifyEventReference());
 
 }
