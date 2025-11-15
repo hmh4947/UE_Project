@@ -31,6 +31,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FX")
 	UNiagaraComponent* NiagaraComponent;
 
+	UPROPERTY(EditAnywhere, Category = "FX")
+	FString NiagaraEffectPath = TEXT("/Game/NewFolder/NS_Ring.NS_Ring");
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USphereComponent* SphereComponent;

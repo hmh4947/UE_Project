@@ -75,7 +75,7 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 		ObjectTypes,
 		false,
 		IgnoreActors,
-		EDrawDebugTrace::None,
+		EDrawDebugTrace::ForDuration,
 		Result,
 		true);
 
@@ -233,7 +233,7 @@ void ASkills::MeleeTrace()
 				}
 
 
-				/*DrawDebugLine(
+				DrawDebugLine(
 					GetWorld(),
 					MeleeTracePrevious[i],
 					MeleeTrace[i],
@@ -243,7 +243,7 @@ void ASkills::MeleeTrace()
 					0,
 					1.0f
 				);
-				*/
+
 
 			}
 

@@ -19,7 +19,7 @@ void UStrikeNofityState::BranchingPointNotifyTick(FBranchingPointNotifyPayload& 
 	if (!OwnerActor)return;
 	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(OwnerActor);
 	if (!Warrior)return;
-
+	//AStrikeSkill* MeleeChar = Cast<AStrikeSkill>(Warrior->CurrentSkill);
 	auto* MeleeChar = Warrior->CurrentSkill;
 
 	ASkills* Skill = Cast<ASkills>(Warrior->CurrentSkill);
@@ -27,7 +27,11 @@ void UStrikeNofityState::BranchingPointNotifyTick(FBranchingPointNotifyPayload& 
 	{
 		Skill->MeleeTrace();
 	}
-	
+	/*if (MeleeChar && !MeleeChar->bMeleeBlocked) {
+		MeleeChar->MeleeTrace();
+		NotifyTick(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, FrameDeltaTime);
+
+	}*/
 	else {
 		NotifyEnd(BranchingPointPayload.SkelMeshComponent, BranchingPointPayload.SequenceAsset, FAnimNotifyEventReference());
 
@@ -38,7 +42,7 @@ void UStrikeNofityState::BranchingPointNotifyEnd(FBranchingPointNotifyPayload& B
 {
 	AWarriorCharacter* Warrior = Cast<AWarriorCharacter>(UGameplayStatics::GetPlayerCharacter(BranchingPointPayload.SkelMeshComponent->GetWorld(), 0));
 	if (!Warrior)return;
-	
+	//AStrikeSkill* MeleeChar = Cast<AStrikeSkill>(Warrior->CurrentSkill);
 	ASkills* MeleeChar = Cast<ASkills>(Warrior->CurrentSkill);
 
 	if (MeleeChar) {

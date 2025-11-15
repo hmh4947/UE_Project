@@ -48,11 +48,11 @@ void AUltimateSwingEffect::BeginPlay()
 void AUltimateSwingEffect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-/*	DrawDebugSphere(GetWorld(),
+	DrawDebugSphere(GetWorld(),
 		SphereComponent->GetComponentLocation(),
 		SphereComponent->GetScaledSphereRadius(),
 		12, FColor::Green, false, -1, 0, 2);
-		*/
+
 	if (!SphereComponent->IsActive() == true) return;
 	FVector Forward = GetActorRightVector();
 	FRotator Rotation = FRotator(0.f, 90.f, 0.f);

@@ -92,7 +92,7 @@ void ATrainSkills::damageArea(float radius, float damageAmount, FVector startPos
 		ObjectTypes,
 		false,
 		IgnoreActors,
-		EDrawDebugTrace::None,
+		EDrawDebugTrace::ForDuration,
 		Result,
 		true);
 

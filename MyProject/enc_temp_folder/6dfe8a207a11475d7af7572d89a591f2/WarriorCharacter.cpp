@@ -9,7 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Sword.h"
 #include "Kismet/KismetMathLibrary.h"
-//#include "DrawDebugHelpers.h"
+#include "DrawDebugHelpers.h"
 #include "ClickMovePlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "SevargoEnemy.h"
@@ -164,7 +164,7 @@ void AWarriorCharacter::MeleeTraceGetHitActor()
 		
 			
 		}
-		/*
+		
 		//디버그
 		if (MeleeTrace.Num() > 0) {
 			for (int i = 0; i < MeleeTrace.Num(); i++) {
@@ -203,7 +203,7 @@ void AWarriorCharacter::MeleeTraceGetHitActor()
 
 			}
 
-		}*/
+		}
 
 	}
 	
@@ -321,7 +321,7 @@ void AWarriorCharacter::Turn()
 
 			FVector Start = Hit.ImpactPoint;
 			FVector End = Start + Hit.Normal * 100.0f;
-			//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5.0f, 0, 1.0f);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 5.0f, 0, 1.0f);
 
 			// 캐릭터의 현재 위치를 가져옴
 			CharacterLocation = GetActorLocation();

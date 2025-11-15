@@ -4,7 +4,7 @@
 #include "SevargoEnemyAnimInstance.h"
 #include "SevargoEnemy.h"
 #include "HealthComponent.h"
-//#include "DrawDebugHelpers.h"
+#include "DrawDebugHelpers.h"
 #include "EnemyHealthComponent.h"
 #include "TimerManager.h"
 USevargoEnemyAnimInstance::USevargoEnemyAnimInstance()

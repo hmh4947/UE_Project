@@ -32,7 +32,7 @@ AClickMovePlayerController::AClickMovePlayerController()
 	CachedDestination = FVector::ZeroVector;
 	if(GetWorld())
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0F, FColor::Red, TEXT("timer"));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0F, FColor::Red, TEXT("timer"));
 		GetWorld()->GetTimerManager();
 		
 	}
@@ -213,7 +213,7 @@ void AClickMovePlayerController::MoveToMouseCursor()
 			 Start = Hit.ImpactPoint;
 			 End = Start + Hit.Normal * 100.0f;
 			
-		//	DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5.0f, 0, 1.0f);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 5.0f, 0, 1.0f);
 	
 
 		}
@@ -264,7 +264,7 @@ void AClickMovePlayerController::HitDash()
 			ObjectTypes,
 			false,
 			IgnoreActors,
-			EDrawDebugTrace::None, //특정 시간 동안 디버그 라인 표시
+			EDrawDebugTrace::ForDuration, //특정 시간 동안 디버그 라인 표시
 			HitDash,
 			true //자기자신 무시
 		);
@@ -307,7 +307,7 @@ void AClickMovePlayerController::Dash()
 			WarriorCharacterInstance->LaunchCharacter(UKismetMathLibrary::GetForwardVector(WarriorCharacterInstance->GetActorRotation()) *3000.f,false,false);
 
 		}
-	//	DrawDebugLine(GetWorld(), StartL, EndL, FColor::Red, false, 5.0f, 0, 1.0f);
+		DrawDebugLine(GetWorld(), StartL, EndL, FColor::Red, false, 5.0f, 0, 1.0f);
 	
 //	}
 
@@ -390,7 +390,7 @@ void AClickMovePlayerController::coolTimer()
 	Dashcool = false;
 	if (GetWorldTimerManager().IsTimerActive(Timer)) {
 	
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0F, FColor::Red, TEXT("Active"));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0F, FColor::Red, TEXT("Active"));
 	
 	}
 

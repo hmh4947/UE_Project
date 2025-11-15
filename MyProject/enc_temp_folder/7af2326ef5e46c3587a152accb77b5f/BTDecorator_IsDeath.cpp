@@ -20,7 +20,8 @@ bool UBTDecorator_IsDeath::CalculateRawConditionValue(UBehaviorTreeComponent& Ow
 	if (enemy->OnDeath) {
 		UE_LOG(LogTemp, Warning, (TEXT("BTDecorator_DEATH")));
 	}
-	
+	//sevargo enemy 클래스의 ondeath변수를 가져오고 그 변수가 true 라면 실패 리턴
+//	Cast<ASevargoEnemy>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("Target"))));
 
 	return  bResult;
 }
