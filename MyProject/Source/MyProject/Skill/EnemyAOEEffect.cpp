@@ -31,10 +31,31 @@ void AEnemyAOEEffect::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UNiagaraComponent* NiagaraComp = FindComponentByClass<UNiagaraComponent>())
+	UNiagaraComponent* NiagaraComp = FindComponentByClass<UNiagaraComponent>();
+	if (!IsValid(NiagaraComp))
 	{
-		NiagaraComp->OnSystemFinished.AddUniqueDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
+		UE_LOG(LogTemp, Error, TEXT("AEnemyAOEEffect: NiagaraComponent not found!"));
+		return;
 	}
+
+	// 블루프린트 변수(NiagaraEffect) 대신, 경로 문자열을 사용하여 애셋을 런타임에 로드합니다.
+	if (!IsValid(NiagaraComp->GetAsset()) && !NiagaraEffectPath.IsEmpty())
+	{
+		// StaticLoadObject를 사용하여 런타임에 애셋을 로드합니다.
+		UNiagaraSystem* LoadedSystem = Cast<UNiagaraSystem>(StaticLoadObject(UNiagaraSystem::StaticClass(), nullptr, *NiagaraEffectPath));
+
+		if (IsValid(LoadedSystem))
+		{
+			NiagaraComp->SetAsset(LoadedSystem);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("AEnemyAOEEffect: Failed to load Niagara System at path: %s"), *NiagaraEffectPath);
+		}
+	}
+
+	NiagaraComp->OnSystemFinished.AddUniqueDynamic(this, &AEnemyAOEEffect::HandleNiagaraFinished);
+
 	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEnemyAOEEffect::OnBeginOverlap);
 }
 
