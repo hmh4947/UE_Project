@@ -30,14 +30,15 @@ void AEnemyAOESkill::damageArea(float radius, float damageAmount, FVector startP
 
 void AEnemyAOESkill::InitObjects()
 {
-	isDamage = false;
 	
+	isDamage = false;
+
 	for (int i = 0; i < instanceArraySize; i++)
 	{
-		
+
 		AEnemyAOEEffect* DamageAOE = GetWorld()->SpawnActor<AEnemyAOEEffect>(Instance);
-	
-	
+
+
 		DamageAOE->SetActorHiddenInGame(true);
 		DamageAOE->setDamage(damage);
 		UNiagaraComponent* NiagaraComp = DamageAOE->FindComponentByClass<UNiagaraComponent>();
@@ -45,14 +46,21 @@ void AEnemyAOESkill::InitObjects()
 		// 생성 직후엔 재생 안 되도록
 		NiagaraComp->SetAutoActivate(false);
 		NiagaraComp->SetAutoDestroy(false);
+		////
+		NiagaraComp->Activate(true);
+		NiagaraComp->DeactivateImmediate();
+		NiagaraComp->ResetSystem();
+		////
 		USphereComponent* SphereComponent = DamageAOE->FindComponentByClass<USphereComponent>();
 		if (!SphereComponent) return;
 		Instances.Add(DamageAOE);
 	}
+
 }
 
 void AEnemyAOESkill::ReuseObjects()
 {
+	
 	ASevargoEnemy* Enemy = Cast<ASevargoEnemy>(GetOwner());
 	if (!Enemy) return;
 
@@ -79,25 +87,32 @@ void AEnemyAOESkill::ReuseObjects()
 	
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+
 		//나이아가라 재시작
+	
+
 		SkillEffect->EffectFinished.AddUniqueDynamic(this, &AEnemyAOESkill::OnEffectEnd);
 		Obj->SetActorHiddenInGame(false);
 		NiagaraComp->DeactivateImmediate();
+		NiagaraComp->ResetSystem();
 		NiagaraComp->Activate(true);
 	}
+	
 }
 
 
 
 void AEnemyAOESkill::OnEffectEnd(AEnemyAOEEffect* FinishedEffect)
 {
+	
+	UE_LOG(LogTemp, Warning, TEXT("OnEffectEnd CALLED for AOE!"));
 	for (AActor* Obj : Instances)
 	{
 		if (!Obj) continue;
 		USphereComponent* SphereComponent = Obj->FindComponentByClass<USphereComponent>();
 		if (!SphereComponent)  continue;
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
+		SphereComponent->SetGenerateOverlapEvents(true);
 	
 		FTimerHandle TimerHandle;
 		FinishedEffect->GetWorldTimerManager().SetTimer(
@@ -105,6 +120,7 @@ void AEnemyAOESkill::OnEffectEnd(AEnemyAOEEffect* FinishedEffect)
 			[SphereComponent]()
 			{
 				SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				//SphereComponent->SetGenerateOverlapEvents(false);
 			},
 			0.1f,   // 충돌 유지 시간
 			false

@@ -8,6 +8,7 @@
 // Sets default values
 AEnemyAOEEffect::AEnemyAOEEffect()
 {
+	
 	PrimaryActorTick.bCanEverTick = false;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
@@ -30,7 +31,8 @@ AEnemyAOEEffect::AEnemyAOEEffect()
 void AEnemyAOEEffect::BeginPlay()
 {
 	Super::BeginPlay();
-
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SphereComponent->SetGenerateOverlapEvents(false);
 	if (NiagaraComponent)
 	{
 		NiagaraComponent->OnSystemFinished.AddUniqueDynamic(
@@ -41,7 +43,7 @@ void AEnemyAOEEffect::BeginPlay()
 	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(
 		this, &AEnemyAOEEffect::OnBeginOverlap
 	);
-
+	
 
 }
 
@@ -49,6 +51,7 @@ void AEnemyAOEEffect::BeginPlay()
 
 void AEnemyAOEEffect::HandleNiagaraFinished(UNiagaraComponent* Comp)
 {
+
 	
 	EffectFinished.Broadcast(this);
 }

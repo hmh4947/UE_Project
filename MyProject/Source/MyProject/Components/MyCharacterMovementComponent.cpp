@@ -120,7 +120,7 @@ bool UMyCharacterMovementComponent::IsFloorBelow(const FVector& Point) const
     bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, Params);
 #if WITH_EDITOR
     // 디버그용 선 그리기
-    DrawDebugLine(GetWorld(), TraceStart, TraceEnd, bHit ? FColor::Green : FColor::Red, false, 1.f, 0, 2.f);
+    //DrawDebugLine(GetWorld(), TraceStart, TraceEnd, bHit ? FColor::Green : FColor::Red, false, 1.f, 0, 2.f);
 #endif
     return bHit && Hit.bBlockingHit;
 }

@@ -41,7 +41,7 @@ AClickMovePlayerController::AClickMovePlayerController()
 	{
 		GameOverWidgetClass = GameOver.Class;
 	}
-
+	
 }
 
 void AClickMovePlayerController::Initialize()
@@ -148,12 +148,11 @@ void AClickMovePlayerController::InputRightMouseButtonReleased()
 {
 	
 	bClickRightMouse = false;	
-
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FXCursor, CachedDestination, FRotator(0.f, 90.f, 0),
-		FVector(0.8f, 0.8f, 0.8f), true, true, ENCPoolMethod::None, true);
-	if (!FXCursor)
+	if(IsValid(FXCursor))
 	{
-		UE_LOG(LogTemp, Error, TEXT("FXCursor IS NULL DURING COOK/RUN!"));
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FXCursor, CachedDestination, FRotator(0.f, 90.f, 0),
+			FVector(0.8f, 0.8f, 0.8f), true, true, ENCPoolMethod::None, true);
+		
 	}
 
 }

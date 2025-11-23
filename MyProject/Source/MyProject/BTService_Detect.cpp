@@ -39,7 +39,7 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 		CollisionQuertyParma
 	);
 
-	DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Red, false, 0.2f);
+	//DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Red, false, 0.2f);
 
 	UBlackboardComponent* BB = OwnerComp.GetBlackboardComponent();
 	AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(AABAIController::TargetKey));
@@ -59,8 +59,8 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 				}
 
 				// 감지 유지용 시각화
-				DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Green, false, 0.2f);
-				DrawDebugLine(World, ControllingPawn->GetActorLocation(), MyCharacter->GetActorLocation(), FColor::Blue, false, 0.2f);
+			//	DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Green, false, 0.2f);
+			//	DrawDebugLine(World, ControllingPawn->GetActorLocation(), MyCharacter->GetActorLocation(), FColor::Blue, false, 0.2f);
 				return;
 			}
 		}

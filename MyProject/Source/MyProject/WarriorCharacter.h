@@ -132,13 +132,13 @@ public:
 	UPROPERTY()
 	class USevargoEnemyAnimInstance* ABEnemyAnim;
 
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	virtual void OnDeath_Implementation() override;
 
 	virtual void OnTakeDamage_Implementation() override;
 
-	//class UHealthComponent* HealthComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UPlayerHealthComponent* PlayerHealthComponent;
 
 
