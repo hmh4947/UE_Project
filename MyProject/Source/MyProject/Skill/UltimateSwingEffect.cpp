@@ -12,11 +12,12 @@ AUltimateSwingEffect::AUltimateSwingEffect()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	NiagaraSystem = CreateDefaultSubobject<UNiagaraSystem>(TEXT("NiagaraSystem"));
+	
+
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	NiagaraComponent->SetupAttachment(RootComponent);
-	SphereComponent->SetupAttachment(NiagaraComponent);
+	SphereComponent->SetupAttachment(RootComponent);
 	NiagaraComponent->SetWorldRotation(FRotator(0.f, -90.f, 0.f));
 	SphereComponent->SetRelativeRotation(FRotator(0.f, 0.f, 90.f));
 	NiagaraComponent->SetAutoActivate(false);
