@@ -58,6 +58,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float speed;
+
 private:
 	float damage;
 };

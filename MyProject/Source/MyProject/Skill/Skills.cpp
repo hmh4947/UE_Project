@@ -10,6 +10,7 @@
 #include "MyProject/SevargoEnemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/CollisionProfile.h"
 // Sets default values
 ASkills::ASkills()
 {
@@ -53,7 +54,7 @@ void ASkills::SetIsLoseHealth(bool islosehealth)
 	this->isLoseHealth = islosehealth;
 }
 void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVector endPos)
-{
+{/*
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	TArray<AActor*> IgnoreActors;
@@ -61,7 +62,7 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 
 
 	TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
+		
 	ObjectTypes.Add(WorldDynamic);
 
 	FHitResult Result;
@@ -75,9 +76,32 @@ void ASkills::damageArea(float radius, float damageAmount,FVector startPos,FVect
 		ObjectTypes,
 		false,
 		IgnoreActors,
-		EDrawDebugTrace::None,
+		EDrawDebugTrace::ForDuration,
 		Result,
 		true);
+	*/
+	TArray<AActor*> IgnoreActors;
+
+	ETraceTypeQuery TraceType = UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel1);
+
+	IgnoreActors.Add(this);              // 스킬을 쓴 액터 자신
+	IgnoreActors.Add(GetOwner());        // 스킬이 ActorComponent일 경우 안전하게
+
+	// 예: 플레이어 캐릭터 자체를 명시적으로 추가
+	//IgnoreActors.Add(Cast<AWarriorCharacter>(ACharacter));
+	FHitResult Result;
+	bool bResult = UKismetSystemLibrary::SphereTraceSingle(
+		GetWorld(),
+		startPos,
+		endPos,
+		radius,
+		TraceType,
+		false,              // Complex trace 여부
+		IgnoreActors,
+		EDrawDebugTrace::ForDuration,
+		Result,
+		true                // Ignore Self
+	);
 
 	if (bResult == true) {
 		if (Result.GetActor())

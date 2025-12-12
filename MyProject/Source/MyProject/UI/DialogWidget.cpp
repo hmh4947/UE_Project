@@ -219,7 +219,15 @@ void UDialogWidget::EndDialog()
 		}
 		else
 		{
+			APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			AClickMovePlayerController* Controller = Cast<AClickMovePlayerController>(PC);
+			
+			if (Controller)
+			{
+				Controller->CreateGameOverWidget();
+			}
 			UE_LOG(LogTemp, Warning, TEXT("FAIL"));
+			
 		//	½ÇÆÐ
 		}
 	}
